@@ -8,14 +8,19 @@
     <script type="text/javascript" src="{% static 'futebola/js/custom.js' %}" ></script>
 </head>
 <body>
-    <div class="page-header">
-        <h1 style="margin-left: 20px;">Futebola v0.5 Beta</h1>
-        <p style="margin-left: 20px;">
-        Site com informações e estatísticas criado para animar o pessoal e incentivar a participação nos jogos. 
-        Até ao final de 2017 iremos manter um registo dos dados de cada jogo e estará aqui disponível para todos verem, no final do ano será anunciado o melhor jogador.
-        </p>
-    </div>
     <div class="container">
+        <div class="page-header">
+            <h1 style="margin-left: 20px;">Futebola v0.5 Beta</h1>
+            <p style="margin-left: 20px;">
+            Site com informações e estatísticas criado para animar o pessoal e incentivar a participação nos jogos. Até ao final de 2017 iremos manter um registo dos dados de cada jogo e estará aqui disponível para todos verem, no final do ano será anunciado o melhor jogador. GitHub: <a href="https://github.com/mafmartins/futebola" target="_blank">https://github.com/mafmartins/futebola</a>
+            </p>
+            <p style="margin-left: 20px;">
+                <center><button class="btn btn-default" id="crit">Critérios de pontuação</button></center>
+            </p>
+            <p id="crits" style="display:none; margin-left: 20px;">
+                <b>Vitória</b> - 100 Pts | <b>Presença</b> - 50 Pts | <b>Golo</b> - 10 Pts | <b>Assistência</b> - 5 Pts
+            </p>
+        </div>
       <div class="row">
           <div class="col-sm-12">
             <div class="panel panel-default">
@@ -36,7 +41,7 @@
                             <tbody>
                                 {% for jogador in lista_jogadores %}
                                 <tr>
-                                    <td>{{ jogador }}</td>
+                                    <td><a href="{% url 'futebola:jogador' jogador.jogador_id %}">{{ jogador }}</a></td>
                                     <td>{{ jogador.jogos }}</td>
                                     <td>{{ jogador.vitorias }}</td>
                                     <td>{{ jogador.golos }}</td>

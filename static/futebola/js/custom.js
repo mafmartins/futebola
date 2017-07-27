@@ -13,5 +13,11 @@ $( document ).ready(function() {
         window.history.back();
         console.log("TEste!");
     });
+    
+    
+    
+    $("#crit").click(function(){
+        $("#crits").toggle(1000);
+    });
 });
 
