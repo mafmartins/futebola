@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'futebola/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'futebola/css/custom.css' %}" />
+    <script type="text/javascript" src="{% static 'futebola/js/jquery-3.2.1.min.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'futebola/js/custom.js' %}" ></script>
+</head>
+<body>
+    <div class="page-header">
+        <h1 style="margin-left: 20px;">Futebola v0.5 Beta</h1>
+        <p style="margin-left: 20px;">
+        Site com informações e estatísticas criado para animar o pessoal e incentivar a participação nos jogos. 
+        Até ao final de 2017 iremos manter um registo dos dados de cada jogo e estará aqui disponível para todos verem, no final do ano será anunciado o melhor jogador.
+        </p>
+    </div>
+    <div class="container">
+      <div class="row">
+          <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Ranking Jogadores</div>
+                <div class="panel-body" style="overflow-y: scroll; height: 400px">
+                {% if lista_jogadores %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Jogos</th>
+                                    <th>Vitórias</th>
+                                    <th>Golos</th>
+                                    <th>Assistências</th>
+                                    <th>Pontos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for jogador in lista_jogadores %}
+                                <tr>
+                                    <td>{{ jogador }}</td>
+                                    <td>{{ jogador.jogos }}</td>
+                                    <td>{{ jogador.vitorias }}</td>
+                                    <td>{{ jogador.golos }}</td>
+                                    <td>{{ jogador.assistencias }}</td>
+                                    <td><b>{{ jogador.pontuacao }}</b></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                {% else %}
+                    Sem dados para mostrar!
+                {% endif %}
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Últimos Jogos</div>
+                <div class="panel-body">
+                {% if lista_jogos %}
+                    {% for jogo in lista_jogos %}
+                        <a href="{% url 'futebola:jogo' jogo.jogo_id %}">{{ jogo }}</a><br>
+                    {% endfor %}
+                {% else %}
+                    Sem dados para mostrar!
+                {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Próximos Jogos</div>
+                <div class="panel-body">
+                {% if lista_jogos %}
+                    {% for jogo in lista_prox_jogos %}
+                        {{ jogo }}<br>
+                    {% endfor %}
+                {% else %}
+                    Sem dados para mostrar!
+                {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Top 5 - Mais Regulares</div>
+                <div class="panel-body">
+                {% if lista_jog_mais_reg %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Jogos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for jogador in lista_jog_mais_reg %}
+                                <tr>
+                                    <td>{{ jogador }}</td>
+                                    <td>{{ jogador.jogos }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                {% else %}
+                    Sem dados para mostrar!
+                {% endif %}
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Clube Mais Representado</div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Clube</th>
+                                <th>Jogadores</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for clube in lista_clubes %}
+                            <tr>
+                                {% for item in clube %}
+                                <td>{{ item }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Médias</div>
+                <div class="panel-body" style="overflow-x: scroll;">
+                    <table class="table">
+                        <tr>
+                            <td style="text-align: center;">
+                                <span class="label label-success">Média de Idades</span><br>
+                                {{ media_idades }}
+                            </td>
+                            <td style="text-align: center;">
+                                <span class="label label-primary">Média de Golos/Jogo</span><br>
+                                {{ media_golos_jogo }}
+                            </td>
+                            <td style="text-align: center;">
+                                <span class="label label-warning">Média de Golos/Jogador</span><br>
+                                {{ media_golos_jogador }}
+                            </td>
+                            <td style="text-align: center;">
+                                <span class="label label-default">Média de Assist./Jogador</span><br>
+                                {{ media_assist_jogador }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
