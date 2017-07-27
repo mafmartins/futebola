@@ -158,11 +158,11 @@ class Jogo(models.Model):
         if len(lista_equipa_a) > len(lista_equipa_b):
             count = 0
             while (count<len(lista_equipa_a) - len(lista_equipa_b)):
-                lista_equipa_b.append(Ficha_de_jogo.objects.create(jogo=self, jogador=Jogador.objects.create()))
+                lista_equipa_b.append(Ficha_de_jogo())
         else:
             count = 0
             while (count<len(lista_equipa_b) - len(lista_equipa_a)):
-                lista_equipa_a.append(Ficha_de_jogo.objects.create(jogo=self, jogador=Jogador.objects.create()))
+                lista_equipa_a.append(Ficha_de_jogo())
                 
         for f, b in zip(lista_equipa_a, lista_equipa_b):
             lista_jogo.append([f, b])

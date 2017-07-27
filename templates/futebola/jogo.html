@@ -35,10 +35,12 @@
                                 <tr>
                                     {% for ficha in fichas %}
                                     <td id="nome-{{ ficha.equipa }}-{{ ficha.ficha_id }}">
+                                        {% if ficha.jogador.jogador_id %}
                                         <a href="{% url 'futebola:jogador' ficha.jogador.jogador_id %}">
                                         {{ ficha.jogador }}
                                         </a>
-                                    </td>
+                                        {% endif %}
+                                    </td> 
                                     <td style="text-align: center;">{{ ficha.assistencias }}</td>
                                     <td style="text-align: center;" id="golos-{{ ficha.equipa }}-{{ ficha.ficha_id }}">{{ ficha.golos }}</td>
                                     {% endfor %}
