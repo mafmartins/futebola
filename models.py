@@ -68,6 +68,8 @@ class Jogador(models.Model):
             elif ficha.equipa == 'Equipa_B':
                 if ficha.jogo.resultado_b > ficha.jogo.resultado_a:
                     pontos += 100
+            elif ficha.jogo.resultado_a == ficha.jogo.resultado_b:
+                pontos += 50
         
         return pontos
     
