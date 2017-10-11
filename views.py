@@ -9,7 +9,7 @@ import datetime, json
 def index(request):
     lista_jogadores = Jogador.objects.order_by('nome')
     
-    old_lista_jogos = Jogo.objects.order_by('data')
+    old_lista_jogos = Jogo.objects.order_by('-data')[:5]
     lista_jogos = []
     for jogo in old_lista_jogos:
         if jogo.data < datetime.date.today():

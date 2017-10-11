@@ -33,6 +33,32 @@ class Jogador(models.Model):
             
         return vits
     
+    def empates(self):
+        emps = 0
+        
+        fichas = Ficha_de_jogo.objects.filter(jogador=self)
+        
+        for ficha in fichas:
+            if ficha.jogo.resultado_a == ficha.jogo.resultado_b:
+                emps += 1
+            
+        return emps
+    
+    def derrotas(self):
+        ders = 0
+        
+        fichas = Ficha_de_jogo.objects.filter(jogador=self)
+        
+        for ficha in fichas:
+            if ficha.equipa == 'Equipa_A':
+                if ficha.jogo.resultado_a < ficha.jogo.resultado_b:
+                    ders += 1
+            elif ficha.equipa == 'Equipa_B':
+                if ficha.jogo.resultado_b < ficha.jogo.resultado_a:
+                    ders += 1
+            
+        return ders
+    
     def golos(self):
         golos = 0
         
@@ -65,11 +91,14 @@ class Jogador(models.Model):
             if ficha.equipa == 'Equipa_A':
                 if ficha.jogo.resultado_a > ficha.jogo.resultado_b:
                     pontos += 100
+                elif ficha.jogo.resultado_a == ficha.jogo.resultado_b:
+                    pontos += 50
             elif ficha.equipa == 'Equipa_B':
                 if ficha.jogo.resultado_b > ficha.jogo.resultado_a:
                     pontos += 100
-            elif ficha.jogo.resultado_a == ficha.jogo.resultado_b:
-                pontos += 50
+                elif ficha.jogo.resultado_a == ficha.jogo.resultado_b:
+                    pontos += 50
+            
         
         return pontos
     

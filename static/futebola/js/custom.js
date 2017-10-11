@@ -11,13 +11,12 @@ $( document ).ready(function() {
     
     $("#back").click(function(){
         window.history.back();
-        console.log("TEste!");
     });
     
     
     
     $("#crit").click(function(){
-        $("#crits").toggle(1000);
+        $("#crits").slideToggle(1000);
     });
 });
 
