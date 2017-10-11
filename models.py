@@ -15,8 +15,13 @@ class Jogador(models.Model):
     
     def jogos(self):
         fichas = Ficha_de_jogo.objects.filter(jogador=self)
+        jogs = 0
         
-        return len(fichas)
+        for ficha in fichas:
+            if ficha.jogo.data <= datetime.date.today():
+                jogs += 1
+                
+        return jogs
     
     def vitorias(self):
         vits = 0
@@ -86,18 +91,19 @@ class Jogador(models.Model):
         fichas = Ficha_de_jogo.objects.filter(jogador=self)
         
         for ficha in fichas:
-            pontos += (ficha.golos * 10) + (ficha.assistencias * 5) + 50
-            
-            if ficha.equipa == 'Equipa_A':
-                if ficha.jogo.resultado_a > ficha.jogo.resultado_b:
-                    pontos += 100
-                elif ficha.jogo.resultado_a == ficha.jogo.resultado_b:
-                    pontos += 50
-            elif ficha.equipa == 'Equipa_B':
-                if ficha.jogo.resultado_b > ficha.jogo.resultado_a:
-                    pontos += 100
-                elif ficha.jogo.resultado_a == ficha.jogo.resultado_b:
-                    pontos += 50
+            if (not(ficha.jogo.data > datetime.date.today())):
+                pontos += (ficha.golos * 10) + (ficha.assistencias * 5) + 50
+
+                if ficha.equipa == 'Equipa_A':
+                    if ficha.jogo.resultado_a > ficha.jogo.resultado_b:
+                        pontos += 100
+                    elif ficha.jogo.resultado_a == ficha.jogo.resultado_b:
+                        pontos += 50
+                elif ficha.equipa == 'Equipa_B':
+                    if ficha.jogo.resultado_b > ficha.jogo.resultado_a:
+                        pontos += 100
+                    elif ficha.jogo.resultado_a == ficha.jogo.resultado_b:
+                        pontos += 50
             
         
         return pontos
