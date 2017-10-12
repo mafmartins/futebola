@@ -18,7 +18,7 @@ class Jogador(models.Model):
         jogs = 0
         
         for ficha in fichas:
-            if ficha.jogo.data <= datetime.date.today():
+            if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
                 jogs += 1
                 
         return jogs
@@ -29,12 +29,13 @@ class Jogador(models.Model):
         fichas = Ficha_de_jogo.objects.filter(jogador=self)
         
         for ficha in fichas:
-            if ficha.equipa == 'Equipa_A':
-                if ficha.jogo.resultado_a > ficha.jogo.resultado_b:
-                    vits += 1
-            elif ficha.equipa == 'Equipa_B':
-                if ficha.jogo.resultado_b > ficha.jogo.resultado_a:
-                    vits += 1
+            if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
+                if ficha.equipa == 'Equipa_A':
+                    if ficha.jogo.resultado_a > ficha.jogo.resultado_b:
+                        vits += 1
+                elif ficha.equipa == 'Equipa_B':
+                    if ficha.jogo.resultado_b > ficha.jogo.resultado_a:
+                        vits += 1
             
         return vits
     
@@ -44,8 +45,9 @@ class Jogador(models.Model):
         fichas = Ficha_de_jogo.objects.filter(jogador=self)
         
         for ficha in fichas:
-            if ficha.jogo.resultado_a == ficha.jogo.resultado_b:
-                emps += 1
+            if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
+                if ficha.jogo.resultado_a == ficha.jogo.resultado_b:
+                    emps += 1
             
         return emps
     
@@ -55,12 +57,13 @@ class Jogador(models.Model):
         fichas = Ficha_de_jogo.objects.filter(jogador=self)
         
         for ficha in fichas:
-            if ficha.equipa == 'Equipa_A':
-                if ficha.jogo.resultado_a < ficha.jogo.resultado_b:
-                    ders += 1
-            elif ficha.equipa == 'Equipa_B':
-                if ficha.jogo.resultado_b < ficha.jogo.resultado_a:
-                    ders += 1
+            if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
+                if ficha.equipa == 'Equipa_A':
+                    if ficha.jogo.resultado_a < ficha.jogo.resultado_b:
+                        ders += 1
+                elif ficha.equipa == 'Equipa_B':
+                    if ficha.jogo.resultado_b < ficha.jogo.resultado_a:
+                        ders += 1
             
         return ders
     
@@ -91,7 +94,7 @@ class Jogador(models.Model):
         fichas = Ficha_de_jogo.objects.filter(jogador=self)
         
         for ficha in fichas:
-            if (not(ficha.jogo.data > datetime.date.today())):
+            if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
                 pontos += (ficha.golos * 10) + (ficha.assistencias * 5) + 50
 
                 if ficha.equipa == 'Equipa_A':
