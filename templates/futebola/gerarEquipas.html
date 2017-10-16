@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'futebola/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'futebola/css/custom.css' %}" />
+    <script type="text/javascript" src="{% static 'futebola/js/jquery-3.2.1.min.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'futebola/js/custom.js' %}" ></script>
+</head>
+<body>
+    <div class="spacer"></div>
+    <div class="container">
+      <div class="row">
+          <div class="col-sm-10 col-sm-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                <form action="/play/futebola/gerarequipas/" method="post">{% csrf_token %} 
+                {% if lista_jogadores %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Pontos</th>
+                                <th style="text-align:center;">Selecionar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for jogador in lista_jogadores %}
+                            <tr>
+                                <td><a href="{% url 'futebola:jogador' jogador.jogador_id %}">{{ jogador }}</a></td>
+                                <td><b>{{ jogador.pontuacao }}</b></td>
+                                <td style="text-align:center;"><input id="{{ jogador.jogador_id }}" type="checkbox" name="{{ jogador.jogador_id }}" value="{{ jogador.pontuacao }}"></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-sm-2 col-sm-offset-9">
+                            <input type="submit" class="btn btn-default" value="Gerar Equipas...">
+                        </div>
+                    </div>
+                </form>
+                <div id="back" class="btn btn-default">Voltar</div>
+                {% else %}
+                    Sem dados para mostrar!
+                {% endif %}
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

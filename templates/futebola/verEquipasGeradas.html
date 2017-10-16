@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'futebola/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'futebola/css/custom.css' %}" />
+    <script type="text/javascript" src="{% static 'futebola/js/jquery-3.2.1.min.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'futebola/js/custom.js' %}" ></script>
+</head>
+<body>
+    <div class="spacer"></div>
+    <div class="container">
+      <div class="row">
+          <div class="col-sm-10 col-sm-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">Equipas Geradas</div>
+                <div class="panel-body">
+                <div class="row">
+                <div class="col-sm-6" style="padding-right: 0px;">
+                {% if equipa1 %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" style="text-align: center;"><h3 style="margin-top: 10px;">Equipa A</h3></th>
+                                </tr>
+                                <tr>
+                                    <th>Jogador</th>
+                                    <th style="text-align: center;">Pontuação Atual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for jogador in equipa1 %}
+                                <tr>  
+                                    <td>
+                                        <a href="{% url 'futebola:jogador' jogador.jogador_id %}">
+                                        {{ jogador }}
+                                        </a>
+                                    </td> 
+                                    <td style="text-align: center;">{{ jogador.pontuacao }}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td><b>
+                                        TOTAL
+                                    </b></td>
+                                    <td style="text-align: center;"><b>
+                                        {{ somae1 }}
+                                    </b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                {% else %}
+                    Sem dados para mostrar!
+                {% endif %}
+                </div>
+                <div class="col-sm-6" style="padding-right: 0px;">
+                {% if equipa2 %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th colspan="6" style="text-align: center;"><h3 style="margin-top: 10px;">Equipa B</h3></th>
+                                </tr>
+                                <tr>
+                                    <th style="text-align: center;">Pontuação Atual</th>
+                                    <th style="text-align: right;">Jogador</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for jogador in equipa2 %}
+                                <tr>  
+                                    <td style="text-align: center;">{{ jogador.pontuacao }}</td>
+                                    <td style="text-align: right;">
+                                        <a href="{% url 'futebola:jogador' jogador.jogador_id %}">
+                                        {{ jogador }}
+                                        </a>
+                                    </td> 
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td style="text-align: center;"><b>
+                                        {{ somae2 }}
+                                    </b></td>
+                                    <td style="text-align: right;"><b>
+                                        TOTAL
+                                    </b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                {% else %}
+                    Sem dados para mostrar!
+                {% endif %}
+                </div>
+                </div>
+                <div id="back" class="btn btn-default">Voltar</div>
+                </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
