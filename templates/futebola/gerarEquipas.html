@@ -14,13 +14,13 @@
           <div class="col-sm-10 col-sm-offset-1">
             <div class="panel panel-default">
                 <div class="panel-body">
-                <form action="/play/futebola/gerarequipas/" method="post">{% csrf_token %} 
+                <form action="/futebola/gerarequipas/" method="post">{% csrf_token %} 
                 {% if lista_jogadores %}
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Nome</th>
-                                <th>Pontos</th>
+                                <th>Nota</th>
                                 <th style="text-align:center;">Selecionar</th>
                             </tr>
                         </thead>
@@ -28,8 +28,8 @@
                             {% for jogador in lista_jogadores %}
                             <tr>
                                 <td><a href="{% url 'futebola:jogador' jogador.jogador_id %}">{{ jogador }}</a></td>
-                                <td><b>{{ jogador.pontuacao }}</b></td>
-                                <td style="text-align:center;"><input id="{{ jogador.jogador_id }}" type="checkbox" name="{{ jogador.jogador_id }}" value="{{ jogador.pontuacao }}"></td>
+                                <td><b>{{ jogador.nota }}</b></td>
+                                <td style="text-align:center;"><input id="{{ jogador.jogador_id }}" type="checkbox" name="{{ jogador.jogador_id }}" value="{{ jogador.nota }}"></td>
                             </tr>
                             {% endfor %}
                         </tbody>

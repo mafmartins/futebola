@@ -3,20 +3,26 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
-from .models import Jogador, Jogo, Ficha_de_jogo
+from .models import Jogador, Jogo, Ficha_de_jogo, Epoca
 import datetime, json
 
-def index(request):
+def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
+    epocas = Epoca.objects.all();
+    epoca = get_object_or_404(Epoca, numeracao_epoca=epoca_num)
     lista_jogadores = Jogador.objects.order_by('nome')
     
-    old_lista_jogos = Jogo.objects.order_by('-data')[:5]
+    old_lista_jogos = Jogo.objects.filter(epoca__numeracao_epoca = epoca_num).order_by('-data')
     lista_jogos = []
-    for jogo in old_lista_jogos:
+    for idx, jogo in enumerate(old_lista_jogos):
+        if idx > 4:
+            break
         if jogo.data < datetime.date.today():
             lista_jogos.append(jogo)
             
     lista_prox_jogos = []
-    for jogo in old_lista_jogos:
+    for idx, jogo in enumerate(old_lista_jogos):
+        if idx > 4:
+            break
         if jogo.data >= datetime.date.today():
             lista_prox_jogos.append(jogo)
     
@@ -26,15 +32,18 @@ def index(request):
             lista_clubes.append([k,v])
     
     unsorted_results = lista_jogadores.all()
-    lista_jogadores = sorted(unsorted_results, key= lambda t: t.pontuacao(), reverse=True)
-    lista_jog_mais_reg = sorted(unsorted_results, key= lambda t: t.jogos(), reverse=True)[:5]
+    lista_jogadores = sorted(unsorted_results, key= lambda t: t.pontuacao(epoca_num), reverse=True)
+    lista_jog_mais_reg = sorted(unsorted_results, key= lambda t: t.jogos(epoca_num), reverse=True)[:5]
     
     media_idades = Jogador.media_idades()
-    media_golos_jogo = Jogo.media_golos_jogo()
-    media_golos_jogador = Jogador.media_golos_jogador()
-    media_assist_jogador = Jogador.media_assist_jogador()
+    media_golos_jogo = Jogo.media_golos_jogo(epoca_num)
+    media_golos_jogador = Jogador.media_golos_jogador(epoca_num)
+    media_assist_jogador = Jogador.media_assist_jogador(epoca_num)
     
     context = {
+        'epocas': epocas,
+        'epoca': epoca,
+        'epoca_num': epoca_num,
         'lista_jogadores': lista_jogadores,
         'lista_jog_mais_reg': lista_jog_mais_reg,
         'lista_jogos': lista_jogos,
@@ -80,11 +89,12 @@ def gerarEquipas(request):
     else:            
         ar = []
         ints = []
-        for item in request.POST:
+        post_list = request.POST.copy()
+        for item in post_list:
             try:
-                obj = {item : int(request.POST[item])}
+                obj = {item : int(post_list[item])}
                 ar.append(obj)
-                ints.append(int(request.POST[item]))
+                ints.append(int(post_list[item]))
             except:
                 continue
 
@@ -94,17 +104,21 @@ def gerarEquipas(request):
         team2 = []
 
         for x in vals1:
-          for y in request.POST:
+          for y in post_list:
             try:
-              if x == int(request.POST[y]):
-                team1.append({y : request.POST[y]})
+              if x == int(post_list[y]):
+                team1.append({y : post_list[y]})
+                del post_list[y]
+                break
             except:
               continue
         for x in vals2:
-          for y in request.POST:
+          for y in post_list:
             try:
-              if x == int(request.POST[y]):
-                team2.append({y : request.POST[y]})
+              if x == int(post_list[y]):
+                team2.append({y : post_list[y]})
+                del post_list[y]
+                break
             except:
               continue
         
@@ -128,6 +142,7 @@ def gerarEquipas(request):
             'somae2' : sume2
         }
         
+        #return JsonResponse(post_list, safe=False)
         return render(request, 'futebola/verEquipasGeradas.html', context)
     
 def team(t):
