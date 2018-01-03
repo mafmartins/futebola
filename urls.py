@@ -13,5 +13,5 @@ urlpatterns = [
     # ex: /futebola/jogo/5/
     url(r'^jogador/(?P<jogador_id>[0-9]+)/$', views.jogador, name='jogador'),
     # ex: /futebola/jogo/5/
-    url(r'^gerarequipas/', views.gerarEquipas, name='gerarEquipas')
+    url(r'^gerar/', views.gerarEquipas, name='gerarEquipas')
 ]

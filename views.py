@@ -75,8 +75,10 @@ def jogo(request, jogo_id):
 
 def jogador(request, jogador_id):
     jogador = get_object_or_404(Jogador, jogador_id=jogador_id)
+    epoca_num = Epoca.objects.order_by('-epoca_id').first().numeracao_epoca
     
     context = {
+        'epoca_num' : epoca_num,
         'jogador' : jogador
     }
         
@@ -84,6 +86,7 @@ def jogador(request, jogador_id):
   
 def gerarEquipas(request):
     lista_jogadores = Jogador.objects.order_by('nome')
+    lista_jogadores = sorted(lista_jogadores, key= lambda t: t.nota(), reverse=True)
     
     context = {
         'lista_jogadores': lista_jogadores

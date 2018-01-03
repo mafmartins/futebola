@@ -11,23 +11,49 @@
     <div class="spacer"></div>
     <div class="container">
       <div class="row">
-          <div class="col-sm-10 col-sm-offset-1">
+          <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                <form action="/futebola/gerarequipas/" method="post">{% csrf_token %} 
+                <form action="/futebola/gerar/" method="post">{% csrf_token %} 
                 {% if lista_jogadores %}
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Nome</th>
+                                <th>G.R</th>
+                                <th>Def</th>
+                                <th>Vel</th>
+                                <th>Res</th>
+                                <th>For</th>
+                                <th>Gar</th>
+                                <th>Pos</th>
+                                <th>Pas</th>
+                                <th>Tec</th>
+                                <th>Atq</th>
+                                <th>Rlo</th>
+                                <th>Fin</th>
+                                <th>Exp</th>
                                 <th>Nota</th>
-                                <th style="text-align:center;">Selecionar</th>
+                                <th style="text-align:center;">Sel.</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for jogador in lista_jogadores %}
                             <tr>
                                 <td><a href="{% url 'futebola:jogador' jogador.jogador_id %}">{{ jogador }}</a></td>
+                                <td>{{ jogador.guarda_redes }}</td>
+                                <td>{{ jogador.defesa }}</td>
+                                <td>{{ jogador.velocidade }}</td>
+                                <td>{{ jogador.resistencia }}</td>
+                                <td>{{ jogador.forca }}</td>
+                                <td>{{ jogador.garra }}</td>
+                                <td>{{ jogador.posicionamento }}</td>
+                                <td>{{ jogador.passe }}</td>
+                                <td>{{ jogador.tecnica }}</td>
+                                <td>{{ jogador.ataque }}</td>
+                                <td>{{ jogador.remates_longe }}</td>
+                                <td>{{ jogador.finalizacao }}</td>
+                                <td>{{ jogador.experiencia }}</td>
                                 <td><b>{{ jogador.nota }}</b></td>
                                 <td style="text-align:center;"><input id="{{ jogador.jogador_id }}" type="checkbox" name="{{ jogador.jogador_id }}" value="{{ jogador.nota }}"></td>
                             </tr>

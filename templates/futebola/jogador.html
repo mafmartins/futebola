@@ -1,4 +1,5 @@
 {% load static %}
+{% load jogador_extras %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,23 +33,23 @@
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold">Golos:</td>
-                                    <td>{{ jogador.golos }}</td>
+                                    <td>{{ jogador|golos:epoca_num }}</td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold">Assistências:</td>
-                                    <td>{{ jogador.assistencias }}</td>
+                                    <td>{{ jogador|assistencias:epoca_num }}</td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold">Jogos:</td>
-                                    <td>{{ jogador.jogos }}</td>
+                                    <td>{{ jogador|jogos:epoca_num }}</td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold">Vitórias:</td>
-                                    <td>{{ jogador.vitorias }}</td>
+                                    <td>{{ jogador|vitorias:epoca_num }}</td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: bold; text-transform: uppercase;">Pontuação:</td>
-                                    <td style="font-weight: bold; text-transform: uppercase;">{{ jogador.pontuacao }}</td>
+                                    <td style="font-weight: bold; text-transform: uppercase;">{{ jogador|pontuacao:epoca_num }}</td>
                                 </tr>
                             </tbody>
                         </table>
