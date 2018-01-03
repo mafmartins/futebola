@@ -6,12 +6,17 @@ from django.http import HttpResponse, JsonResponse
 from .models import Jogador, Jogo, Ficha_de_jogo, Epoca
 import datetime, json
 
+# import the logging library
+import logging
+
 def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
     epocas = Epoca.objects.all();
     epoca = get_object_or_404(Epoca, numeracao_epoca=epoca_num)
     lista_jogadores = Jogador.objects.order_by('nome')
     
     old_lista_jogos = Jogo.objects.filter(epoca__numeracao_epoca = epoca_num).order_by('-data')
+    logging.warning('WUT!')
+    
     lista_jogos = []
     for idx, jogo in enumerate(old_lista_jogos):
         if idx > 4:

@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <div class="page-header">
-            <h1 style="margin-left: 20px;">Futebola v0.7.0 RC</h1>
+            <h1 style="margin-left: 20px;">Futebola v0.7.1 RC</h1>
             <p style="margin-left: 20px;">
             Site com informações e estatísticas criado para animar o pessoal e incentivar a participação nos jogos. Iremos manter um registo dos dados de cada jogo e estará aqui disponível para todos verem, no final de cada época será anunciado o melhor jogador. GitHub: <a href="https://github.com/mafmartins/futebola" target="_blank">https://github.com/mafmartins/futebola</a>
             </p>
@@ -90,7 +90,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Próximos Jogos</div>
                 <div class="panel-body">
-                {% if lista_jogos %}
+                {% if lista_prox_jogos %}
                     {% for jogo in lista_prox_jogos %}
                         <a href="{% url 'futebola:jogo' jogo.jogo_id %}">{{ jogo }}</a><br>
                     {% endfor %}
