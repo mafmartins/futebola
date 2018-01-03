@@ -39,6 +39,8 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
     unsorted_results = lista_jogadores.all()
     lista_jogadores = sorted(unsorted_results, key= lambda t: t.pontuacao(epoca_num), reverse=True)
     lista_jog_mais_reg = sorted(unsorted_results, key= lambda t: t.jogos(epoca_num), reverse=True)[:5]
+    lista_jog_mais_gol = sorted(unsorted_results, key= lambda t: t.golos(epoca_num), reverse=True)[:5]
+    lista_jog_mais_ass = sorted(unsorted_results, key= lambda t: t.assistencias(epoca_num), reverse=True)[:5]
     
     media_idades = Jogador.media_idades()
     media_golos_jogo = Jogo.media_golos_jogo(epoca_num)
@@ -57,7 +59,9 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
         'media_idades' : media_idades,
         'media_golos_jogo' : media_golos_jogo,
         'media_golos_jogador' : media_golos_jogador,
-        'media_assist_jogador' : media_assist_jogador
+        'media_assist_jogador' : media_assist_jogador,
+        'lista_jog_mais_gol' : lista_jog_mais_gol,
+        'lista_jog_mais_ass' : lista_jog_mais_ass
     }
     return render(request, 'futebola/index.html', context)
 

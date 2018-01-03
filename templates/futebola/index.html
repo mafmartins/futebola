@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <div class="page-header">
-            <h1 style="margin-left: 20px;">Futebola v0.7.2 RC</h1>
+            <h1 style="margin-left: 20px;">Futebola v0.7.3 RC</h1>
             <p style="margin-left: 20px;">
             Site com informações e estatísticas criado para animar o pessoal e incentivar a participação nos jogos. Iremos manter um registo dos dados de cada jogo e estará aqui disponível para todos verem, no final de cada época será anunciado o melhor jogador. GitHub: <a href="https://github.com/mafmartins/futebola" target="_blank">https://github.com/mafmartins/futebola</a>
             </p>
@@ -153,7 +153,61 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Melhores Marcadores</div>
+                <div class="panel-body">
+                {% if lista_jog_mais_reg %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Golos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for jogador in lista_jog_mais_gol %}
+                                <tr>
+                                    <td>{{ jogador }}</td>
+                                    <td>{{ jogador|golos:epoca_num }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                {% else %}
+                    Sem dados para mostrar!
+                {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Mais Assistências</div>
+                <div class="panel-body">
+                {% if lista_jog_mais_reg %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Assis.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for jogador in lista_jog_mais_ass %}
+                                <tr>
+                                    <td>{{ jogador }}</td>
+                                    <td>{{ jogador|assistencias:epoca_num }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                {% else %}
+                    Sem dados para mostrar!
+                {% endif %}
+                </div>
+            </div>
+        </div>
+        <!--<div class="col-sm-8">
             <div class="panel panel-default">
                 <div class="panel-heading">Médias</div>
                 <div class="panel-body" style="overflow-x: scroll;">
@@ -179,7 +233,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div>-->
       </div>
     </div>
 </body>
