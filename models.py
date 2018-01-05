@@ -107,25 +107,26 @@ class Jogador(models.Model):
         return asts
         
     
-    def pontuacao(self, epoca):      
+    def pontuacao(self, epoca_num):      
         pontos = 0
         
-        fichas = Ficha_de_jogo.objects.filter(jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        fichas = Ficha_de_jogo.objects.filter(jogador=self, jogo__epoca__numeracao_epoca=epoca_num)
+        epoca = Epoca.objects.filter(numeracao_epoca=epoca_num).first()
         
         for ficha in fichas:
             if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
-                pontos += (ficha.golos * 10) + (ficha.assistencias * 5) + 50
+                pontos += (ficha.golos * epoca.valor_golos) + (ficha.assistencias * epoca.valor_assistencias) + epoca.valor_participacao
 
                 if ficha.equipa == 'Equipa_A':
                     if ficha.jogo.resultado_a > ficha.jogo.resultado_b:
-                        pontos += 100
+                        pontos += epoca.valor_vitoria
                     elif ficha.jogo.resultado_a == ficha.jogo.resultado_b:
-                        pontos += 50
+                        pontos += epoca.valor_empate
                 elif ficha.equipa == 'Equipa_B':
                     if ficha.jogo.resultado_b > ficha.jogo.resultado_a:
-                        pontos += 100
+                        pontos += epoca.valor_vitoria
                     elif ficha.jogo.resultado_a == ficha.jogo.resultado_b:
-                        pontos += 50
+                        pontos += epoca.valor_empate
             
         
         return pontos
@@ -276,7 +277,7 @@ class Ficha_de_jogo(models.Model):
       
 class Epoca(models.Model):
     epoca_id = models.AutoField(primary_key=True)
-    numeracao_epoca = models.IntegerField(default=0)
+    numeracao_epoca = models.IntegerField(unique=True, default=0)
     inicio = models.DateField(default=datetime.date.today)
     fim = models.DateField(default=datetime.date.today)
     valor_participacao = models.IntegerField(default=0)
