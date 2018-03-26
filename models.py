@@ -146,7 +146,7 @@ class Jogador(models.Model):
         media = 0
         
         for jogador in jogadores:
-            soma += jogador.idade
+            soma += jogador.idade()
             count+=1
             
         media = soma / float(count)
