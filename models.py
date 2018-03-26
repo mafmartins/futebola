@@ -9,6 +9,7 @@ class Jogador(models.Model):
     jogador_id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=100)
     idade = models.IntegerField(default=0)
+    data_nascimento = models.DateField(default=datetime.date.today)
     clube_favorito = models.CharField(max_length=100)
     guarda_redes = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
     defesa = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
@@ -26,6 +27,12 @@ class Jogador(models.Model):
     
     def __unicode__(self):
         return u"%s" % self.nome
+    
+    def idade(self):
+        today = datetime.date.today()
+        idade = today.year - self.data_nascimento.year - ((today.month, today.day) < (self.data_nascimento.month, self.data_nascimento.day))
+        
+        return idade
       
     def nota(self):
         nota = self.guarda_redes + self.defesa + self.ataque + self.velocidade + self.resistencia + self.forca + self.tecnica + self.passe + self.remates_longe + self.finalizacao + self.posicionamento + self.garra + self.experiencia

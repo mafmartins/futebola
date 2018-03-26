@@ -12,10 +12,15 @@ import logging
 def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
     epocas = Epoca.objects.all();
     epoca = get_object_or_404(Epoca, numeracao_epoca=epoca_num)
-    lista_jogadores = Jogador.objects.order_by('nome')
     
     old_lista_jogos = Jogo.objects.filter(epoca__numeracao_epoca = epoca_num).order_by('-data')
-    logging.warning('WUT!')
+    #logging.warning('WUT!')
+    
+    if(old_lista_jogos.count()>0):
+        jogadores_q_jogaram = [jogador.jogador_id for jogador in Jogador.objects.all() if jogador.jogos(epoca_num) > 0]
+        lista_jogadores = Jogador.objects.filter(jogador_id__in=jogadores_q_jogaram).order_by('nome')
+    else:
+        lista_jogadores = Jogador.objects.order_by('nome')
     
     lista_jogos = []
     for idx, jogo in enumerate(old_lista_jogos):
