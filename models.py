@@ -40,7 +40,7 @@ class Jogador(models.Model):
         return nota
     
     def jogos(self, epoca):
-        fichas = Ficha_de_jogo.objects.filter(jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        fichas = Ficha_de_jogo.objects.select_related('jogo').filter(jogador=self, jogo__epoca__numeracao_epoca=epoca)
         jogs = 0
         
         for ficha in fichas:
@@ -52,7 +52,7 @@ class Jogador(models.Model):
     def vitorias(self, epoca):
         vits = 0
         
-        fichas = Ficha_de_jogo.objects.filter(jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        fichas = Ficha_de_jogo.objects.select_related('jogo').filter(jogador=self, jogo__epoca__numeracao_epoca=epoca)
         
         for ficha in fichas:
             if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
@@ -68,7 +68,7 @@ class Jogador(models.Model):
     def empates(self, epoca):
         emps = 0
         
-        fichas = Ficha_de_jogo.objects.filter(jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        fichas = Ficha_de_jogo.objects.select_related('jogo').filter(jogador=self, jogo__epoca__numeracao_epoca=epoca)
         
         for ficha in fichas:
             if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
@@ -80,7 +80,7 @@ class Jogador(models.Model):
     def derrotas(self, epoca):
         ders = 0
         
-        fichas = Ficha_de_jogo.objects.filter(jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        fichas = Ficha_de_jogo.objects.select_related('jogo').filter(jogador=self, jogo__epoca__numeracao_epoca=epoca)
         
         for ficha in fichas:
             if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
@@ -117,7 +117,7 @@ class Jogador(models.Model):
     def pontuacao(self, epoca_num):
         pontos = 0
         
-        fichas = Ficha_de_jogo.objects.filter(jogador=self, jogo__epoca__numeracao_epoca=epoca_num)
+        fichas = Ficha_de_jogo.objects.select_related('jogo').filter(jogador=self, jogo__epoca__numeracao_epoca=epoca_num)
         epoca = Epoca.objects.filter(numeracao_epoca=epoca_num).first()
         
         for ficha in fichas:

@@ -46,7 +46,7 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
     #fError.write("\nStep 4: "+str(Tnow))
     lista_clubes = []
     for item in Jogador.lista_clubes():
-        for k, v in item.iteritems():
+        for k, v in item.items():
             lista_clubes.append([k,v])
     Tnow = datetime.datetime.now() - Tinit
     #fError.write("\nStep 5: "+str(Tnow))
@@ -199,7 +199,7 @@ def team(t):
 
     for n in iterations:
         newmoves = {}
-        for total, roster in oldmoves.iteritems():
+        for total, roster in oldmoves.items():
             for p in roster:
                 people_left = roster[:]
                 people_left.remove(p)
