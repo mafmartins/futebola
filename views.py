@@ -22,7 +22,7 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
     #logging.warning('WUT!')
     
     if(old_lista_jogos.count()>0):
-        jogadores_q_jogaram = [jogador.jogador_id for jogador in Jogador.objects.all() if jogador.jogos(epoca_num) > 0]
+        jogadores_q_jogaram = Ficha_de_jogo.objects.select_related('jogador').select_related('jogo').values('jogador').filter(jogo__epoca__numeracao_epoca=2).distinct()
         lista_jogadores = Jogador.objects.filter(jogador_id__in=jogadores_q_jogaram).order_by('nome')
     else:
         lista_jogadores = Jogador.objects.order_by('nome')
