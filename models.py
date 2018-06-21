@@ -114,7 +114,7 @@ class Jogador(models.Model):
         return asts
         
     
-    def pontuacao(self, epoca_num):      
+    def pontuacao(self, epoca_num):
         pontos = 0
         
         fichas = Ficha_de_jogo.objects.filter(jogador=self, jogo__epoca__numeracao_epoca=epoca_num)

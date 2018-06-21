@@ -8,11 +8,16 @@ import datetime, json
 
 # import the logging library
 import logging
+from django.db import connection
 
 def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
-    epocas = Epoca.objects.all();
+    #fError = open('timers.log','a')
+    Tinit = datetime.datetime.now()
+    #fError.write("\nInicio: "+str(datetime.datetime.now()))
+    epocas = Epoca.objects.all()
     epoca = get_object_or_404(Epoca, numeracao_epoca=epoca_num)
-    
+    Tnow = datetime.datetime.now() - Tinit
+    #fError.write("\nStep 1: "+str(Tnow))
     old_lista_jogos = Jogo.objects.filter(epoca__numeracao_epoca = epoca_num).order_by('-data')
     #logging.warning('WUT!')
     
@@ -21,37 +26,43 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
         lista_jogadores = Jogador.objects.filter(jogador_id__in=jogadores_q_jogaram).order_by('nome')
     else:
         lista_jogadores = Jogador.objects.order_by('nome')
-    
+    Tnow = datetime.datetime.now() - Tinit
+    #fError.write("\nStep 2: "+str(Tnow))
     lista_jogos = []
     for idx, jogo in enumerate(old_lista_jogos):
         if idx > 4:
             break
         if jogo.data < datetime.date.today():
             lista_jogos.append(jogo)
-            
+    Tnow = datetime.datetime.now() - Tinit
+    #fError.write("\nStep 3: "+str(Tnow))        
     lista_prox_jogos = []
     for idx, jogo in enumerate(old_lista_jogos):
         if idx > 4:
             break
         if jogo.data >= datetime.date.today():
             lista_prox_jogos.append(jogo)
-    
+    Tnow = datetime.datetime.now() - Tinit
+    #fError.write("\nStep 4: "+str(Tnow))
     lista_clubes = []
     for item in Jogador.lista_clubes():
         for k, v in item.iteritems():
             lista_clubes.append([k,v])
-    
+    Tnow = datetime.datetime.now() - Tinit
+    #fError.write("\nStep 5: "+str(Tnow))
     unsorted_results = lista_jogadores.all()
     lista_jogadores = sorted(unsorted_results, key= lambda t: t.pontuacao(epoca_num), reverse=True)
     lista_jog_mais_reg = sorted(unsorted_results, key= lambda t: t.jogos(epoca_num), reverse=True)[:5]
     lista_jog_mais_gol = sorted(unsorted_results, key= lambda t: t.golos(epoca_num), reverse=True)[:5]
     lista_jog_mais_ass = sorted(unsorted_results, key= lambda t: t.assistencias(epoca_num), reverse=True)[:5]
-    
+    Tnow = datetime.datetime.now() - Tinit
+    #fError.write("\nStep 6: "+str(Tnow))
     media_idades = Jogador.media_idades()
     media_golos_jogo = Jogo.media_golos_jogo(epoca_num)
     media_golos_jogador = Jogador.media_golos_jogador(epoca_num)
     media_assist_jogador = Jogador.media_assist_jogador(epoca_num)
-    
+    Tnow = datetime.datetime.now() - Tinit
+    #fError.write("\nStep 7: "+str(Tnow))
     context = {
         'epocas': epocas,
         'epoca': epoca,
@@ -68,6 +79,11 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
         'lista_jog_mais_gol' : lista_jog_mais_gol,
         'lista_jog_mais_ass' : lista_jog_mais_ass
     }
+    Tnow = datetime.datetime.now() - Tinit
+    #fError.write("\nStep Final: "+str(Tnow))
+    #fError.write("\nFim: "+str(datetime.datetime.now()))
+    #fError.write("\n"+str(connection.queries))
+    #fError.close()
     return render(request, 'futebola/index.html', context)
 
 def jogo(request, jogo_id):
