@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from .models import Jogador, Jogo, Ficha_de_jogo, Epoca
 import datetime, json
+from django.db.models import Sum, Count
 
 # import the logging library
 import logging
@@ -52,10 +53,9 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
     #fError.write("\nStep 5: "+str(Tnow))
     unsorted_results = lista_jogadores.all()
     lista_jogadores = sorted(unsorted_results, key= lambda t: t.pontuacao(epoca_num), reverse=True)
-    lista_jog_mais_reg = sorted(unsorted_results, key= lambda t: t.jogos(epoca_num), reverse=True)[:5]
-    lista_jog_mais_gol = sorted(unsorted_results, key= lambda t: t.golos(epoca_num), reverse=True)[:5]
-    lista_jog_mais_ass = sorted(unsorted_results, key= lambda t: t.assistencias(epoca_num), reverse=True)[:5]
-    Tnow = datetime.datetime.now() - Tinit
+    lista_jog_mais_reg = Ficha_de_jogo.objects.select_related('jogador').select_related('jogo').values('jogador__nome').annotate(golos=Sum('golos')).annotate(assis=Sum('assistencias')).annotate(jogos=Count('ficha_id')).filter(jogo__epoca__numeracao_epoca=2).distinct().order_by('-jogos')[:5]
+    lista_jog_mais_gol = Ficha_de_jogo.objects.select_related('jogador').select_related('jogo').values('jogador__nome').annotate(golos=Sum('golos')).annotate(assis=Sum('assistencias')).annotate(jogos=Count('ficha_id')).filter(jogo__epoca__numeracao_epoca=2).distinct().order_by('-golos', 'jogos')[:5]
+    lista_jog_mais_ass = Ficha_de_jogo.objects.select_related('jogador').select_related('jogo').values('jogador__nome').annotate(golos=Sum('golos')).annotate(assis=Sum('assistencias')).annotate(jogos=Count('ficha_id')).filter(jogo__epoca__numeracao_epoca=2).distinct().order_by('-assis', 'jogos')[:5]
     #fError.write("\nStep 6: "+str(Tnow))
     media_idades = Jogador.media_idades()
     media_golos_jogo = Jogo.media_golos_jogo(epoca_num)
