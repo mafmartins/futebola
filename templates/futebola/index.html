@@ -53,13 +53,13 @@
                                 {% for jogador in lista_jogadores %}
                                 <tr>
                                     <td><a href="{% url 'futebola:jogador' jogador.jogador_id %}">{{ jogador.nome }}</a></td>
-                                    <td>{{ jogador|jogos:epoca_num }}</td>
-                                    <td>{{ jogador|vitorias:epoca_num }}</td>
-                                    <td>{{ jogador|empates:epoca_num }}</td>
-                                    <td>{{ jogador|derrotas:epoca_num }}</td>
-                                    <td>{{ jogador|golos:epoca_num }}</td>
-                                    <td>{{ jogador|assistencias:epoca_num }}</td>
-                                    <td><b>{{ jogador|pontuacao:epoca_num }}</b></td>
+                                    <td>{{ jogador.jogos }}</td>
+                                    <td>{{ jogador.vitorias }}</td>
+                                    <td>{{ jogador.empates }}</td>
+                                    <td>{{ jogador.derrotas }}</td>
+                                    <td>{{ jogador.golos }}</td>
+                                    <td>{{ jogador.assistencias }}</td>
+                                    <td><b>{{ jogador.pontuacao }}</b></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -115,7 +115,7 @@
                             <tbody>
                                 {% for jogador in lista_jog_mais_reg %}
                                 <tr>
-                                    <td>{{ jogador.jogador__nome }}</td>
+                                    <td>{{ jogador.nome }}</td>
                                     <td>{{ jogador.jogos }}</td>
                                 </tr>
                                 {% endfor %}
@@ -168,7 +168,7 @@
                             <tbody>
                                 {% for jogador in lista_jog_mais_gol %}
                                 <tr>
-                                    <td>{{ jogador.jogador__nome }}</td>
+                                    <td>{{ jogador.nome }}</td>
                                     <td>{{ jogador.golos }}</td>
                                 </tr>
                                 {% endfor %}
@@ -195,8 +195,8 @@
                             <tbody>
                                 {% for jogador in lista_jog_mais_ass %}
                                 <tr>
-                                    <td>{{ jogador.jogador__nome }}</td>
-                                    <td>{{ jogador.assis }}</td>
+                                    <td>{{ jogador.nome }}</td>
+                                    <td>{{ jogador.assistencias }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

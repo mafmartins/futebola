@@ -22,11 +22,6 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
     old_lista_jogos = Jogo.objects.filter(epoca__numeracao_epoca = epoca_num).order_by('-data')
     #logging.warning('WUT!')
     
-    if(old_lista_jogos.count()>0):
-        jogadores_q_jogaram = Ficha_de_jogo.objects.select_related('jogador').select_related('jogo').values('jogador').filter(jogo__epoca__numeracao_epoca=2).distinct()
-        lista_jogadores = Jogador.objects.filter(jogador_id__in=jogadores_q_jogaram).order_by('nome')
-    else:
-        lista_jogadores = Jogador.objects.order_by('nome')
     Tnow = datetime.datetime.now() - Tinit
     #fError.write("\nStep 2: "+str(Tnow))
     lista_jogos = []
@@ -51,11 +46,10 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
             lista_clubes.append([k,v])
     Tnow = datetime.datetime.now() - Tinit
     #fError.write("\nStep 5: "+str(Tnow))
-    unsorted_results = lista_jogadores.all()
-    lista_jogadores = sorted(unsorted_results, key= lambda t: t.pontuacao(epoca_num), reverse=True)
-    lista_jog_mais_reg = Ficha_de_jogo.objects.select_related('jogador').select_related('jogo').values('jogador__nome').annotate(golos=Sum('golos')).annotate(assis=Sum('assistencias')).annotate(jogos=Count('ficha_id')).filter(jogo__epoca__numeracao_epoca=2).distinct().order_by('-jogos')[:5]
-    lista_jog_mais_gol = Ficha_de_jogo.objects.select_related('jogador').select_related('jogo').values('jogador__nome').annotate(golos=Sum('golos')).annotate(assis=Sum('assistencias')).annotate(jogos=Count('ficha_id')).filter(jogo__epoca__numeracao_epoca=2).distinct().order_by('-golos', 'jogos')[:5]
-    lista_jog_mais_ass = Ficha_de_jogo.objects.select_related('jogador').select_related('jogo').values('jogador__nome').annotate(golos=Sum('golos')).annotate(assis=Sum('assistencias')).annotate(jogos=Count('ficha_id')).filter(jogo__epoca__numeracao_epoca=2).distinct().order_by('-assis', 'jogos')[:5]
+    lista_jogadores = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-pontuacao, -golos, -assistencias, -jogos, -vitorias, derrotas')
+    lista_jog_mais_reg = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-jogos')[:5]
+    lista_jog_mais_gol = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-golos, jogos, -vitorias')[:5]
+    lista_jog_mais_ass = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-assistencias, jogos')[:5]
     #fError.write("\nStep 6: "+str(Tnow))
     media_idades = Jogador.media_idades()
     media_golos_jogo = Jogo.media_golos_jogo(epoca_num)
