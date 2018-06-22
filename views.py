@@ -49,7 +49,7 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
     lista_jogadores = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-pontuacao, -golos, -assistencias, -jogos, -vitorias, derrotas')
     lista_jog_mais_reg = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-jogos')[:5]
     lista_jog_mais_gol = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-golos, jogos, -vitorias')[:5]
-    lista_jog_mais_ass = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-assistencias, jogos')[:5]
+    lista_jog_mais_ass = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-assistencias, jogos, -vitorias')[:5]
     #fError.write("\nStep 6: "+str(Tnow))
     media_idades = Jogador.media_idades()
     media_golos_jogo = Jogo.media_golos_jogo(epoca_num)
