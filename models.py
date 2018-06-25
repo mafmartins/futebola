@@ -4,7 +4,9 @@ from __future__ import unicode_literals
 from django.db import models, connection
 from django.core.validators import MaxValueValidator, MinValueValidator
 import datetime
+from django.utils.encoding import python_2_unicode_compatible
 
+@python_2_unicode_compatible
 class Jogador(models.Model):
     jogador_id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=100)
@@ -25,7 +27,7 @@ class Jogador(models.Model):
     garra = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
     experiencia = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
     
-    def __unicode__(self):
+    def __str__(self):
         return u"%s" % self.nome
     
     def idade(self):
@@ -203,6 +205,7 @@ class Jogador(models.Model):
         
         return float("{0:.2f}".format(media))
 
+@python_2_unicode_compatible
 class Jogo(models.Model):
     jogo_id = models.AutoField(primary_key=True)
     data = models.DateField(default=datetime.date.today)
@@ -211,7 +214,7 @@ class Jogo(models.Model):
     resultado_b = models.IntegerField(default=0)
     epoca = models.ForeignKey('Epoca', on_delete=models.CASCADE, null=True)
     
-    def __unicode__(self):
+    def __str__(self):
         return u"%s | %s" % (self.local, self.data)
     
     def lista_equipa(self):
@@ -261,6 +264,7 @@ class Jogo(models.Model):
         
         return float("{0:.2f}".format(media))
 
+@python_2_unicode_compatible
 class Ficha_de_jogo(models.Model):
     ficha_id = models.AutoField(primary_key=True)
     jogo = models.ForeignKey(Jogo, on_delete=models.CASCADE)
@@ -279,9 +283,10 @@ class Ficha_de_jogo(models.Model):
     def epoca(self):
         return self.jogo.epoca
     
-    def __unicode__(self):
+    def __str__(self):
         return u"%s | %s" % (self.jogador, self.jogo)
-      
+
+@python_2_unicode_compatible      
 class Epoca(models.Model):
     epoca_id = models.AutoField(primary_key=True)
     numeracao_epoca = models.IntegerField(unique=True, default=0)
@@ -293,7 +298,7 @@ class Epoca(models.Model):
     valor_golos = models.IntegerField(default=0)
     valor_assistencias = models.IntegerField(default=0)
     
-    def __unicode__(self):
+    def __str__(self):
         return u"Época %s - %s" % (self.numeracao_epoca, self.inicio.year)
 
     def lista_jogs(self, order_by):
