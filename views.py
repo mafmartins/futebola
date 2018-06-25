@@ -46,15 +46,15 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
             lista_clubes.append([k,v])
     Tnow = datetime.datetime.now() - Tinit
     #fError.write("\nStep 5: "+str(Tnow))
-    lista_jogadores = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-pontuacao, -golos, -assistencias, -jogos, -vitorias, derrotas')
-    lista_jog_mais_reg = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-jogos')[:5]
-    lista_jog_mais_gol = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-golos, jogos, -vitorias')[:5]
-    lista_jog_mais_ass = Epoca.objects.get(numeracao_epoca=epoca_num).lista_jogs('-assistencias, jogos, -vitorias')[:5]
+    lista_jogadores = epoca.lista_jogs('-pontuacao, -golos, -assistencias, -jogos, -vitorias, derrotas')
+    lista_jog_mais_reg = epoca.lista_jogs('-jogos')[:5]
+    lista_jog_mais_gol = epoca.lista_jogs('-golos, jogos, -vitorias')[:5]
+    lista_jog_mais_ass = epoca.lista_jogs('-assistencias, jogos, -vitorias')[:5]
     #fError.write("\nStep 6: "+str(Tnow))
-    media_idades = Jogador.media_idades()
-    media_golos_jogo = Jogo.media_golos_jogo(epoca_num)
-    media_golos_jogador = Jogador.media_golos_jogador(epoca_num)
-    media_assist_jogador = Jogador.media_assist_jogador(epoca_num)
+    #media_idades = Jogador.media_idades()
+    #media_golos_jogo = Jogo.media_golos_jogo(epoca_num)
+    #media_golos_jogador = Jogador.media_golos_jogador(epoca_num)
+    #media_assist_jogador = Jogador.media_assist_jogador(epoca_num)
     Tnow = datetime.datetime.now() - Tinit
     #fError.write("\nStep 7: "+str(Tnow))
     context = {
@@ -66,10 +66,10 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
         'lista_jogos': lista_jogos,
         'lista_prox_jogos': lista_prox_jogos,
         'lista_clubes': lista_clubes,
-        'media_idades' : media_idades,
-        'media_golos_jogo' : media_golos_jogo,
-        'media_golos_jogador' : media_golos_jogador,
-        'media_assist_jogador' : media_assist_jogador,
+        #'media_idades' : media_idades,
+        #'media_golos_jogo' : media_golos_jogo,
+        #'media_golos_jogador' : media_golos_jogador,
+        #'media_assist_jogador' : media_assist_jogador,
         'lista_jog_mais_gol' : lista_jog_mais_gol,
         'lista_jog_mais_ass' : lista_jog_mais_ass
     }
