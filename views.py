@@ -102,6 +102,30 @@ def jogador(request, jogador_id):
     }
         
     return render(request, 'futebola/jogador.html', context)
+
+def numerosEpoca(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
+    epocas = Epoca.objects.all()
+    epoca = get_object_or_404(Epoca, numeracao_epoca=epoca_num)
+
+    media_golos_jogador = epoca.media_golos_jogador()
+    media_assist_jogador = epoca.media_assist_jogador()
+    percent_vitorias_jogador = epoca.percentVitorias()
+    percent_derrotas_jogador = epoca.percentDerrotas()
+    mais_jogos_jogador = epoca.lista_jogs('-jogos')[0]
+    vit_consec_jogador = epoca.vitoriasConsec()
+
+    context = {
+        'epocas': epocas,
+        'epoca': epoca,
+        'media_golos_jogador' : media_golos_jogador,
+        'media_assist_jogador' : media_assist_jogador,
+        'percent_vitorias_jogador' : percent_vitorias_jogador,
+        'percent_derrotas_jogador' : percent_derrotas_jogador,
+        'mais_jogos_jogador' : mais_jogos_jogador,
+        'vit_consec_jogador' : vit_consec_jogador,
+    }
+
+    return render(request, 'futebola/numEpoca.html', context)
   
 def gerarEquipas(request):
     lista_jogadores = Jogador.objects.order_by('nome')
