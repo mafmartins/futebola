@@ -327,7 +327,6 @@ class Epoca(models.Model):
         jogador_final = 0
 
         for jog in jogadores:
-            print(jog)
             if int(jog['jogos'])>total_jogos/2:
                 n_percent = (jog['vitorias'] * 100) / jog['jogos']
                 if n_percent > percent:
@@ -349,7 +348,6 @@ class Epoca(models.Model):
         jogador_final = 0
 
         for jog in jogadores:
-            print(jog)
             if int(jog['jogos'])>total_jogos/2:
                 n_percent = (jog['derrotas'] * 100) / jog['jogos']
                 if n_percent > percent:
