@@ -1,4 +1,4 @@
-# Futebola v0.7.3 RC
+# Futebola v1.0
 Acumulador de estatísticas e pontuações sobre jogos amadores entre amigos feito com Django, Javascript e Bootstrap. 
 
-Versão Demo: https://django.fansubs.pt/futebola
+Versão Demo: https://futebola.fansubs.pt/
