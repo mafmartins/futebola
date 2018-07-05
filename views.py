@@ -6,6 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from .models import Jogador, Jogo, Ficha_de_jogo, Epoca
 import datetime, json
 from django.db.models import Sum, Count
+from django.urls import reverse
 
 # import the logging library
 import logging
@@ -17,46 +18,39 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
     #fError.write("\nInicio: "+str(datetime.datetime.now()))
     epocas = Epoca.objects.all()
     epoca = get_object_or_404(Epoca, numeracao_epoca=epoca_num)
-    Tnow = datetime.datetime.now() - Tinit
-    #fError.write("\nStep 1: "+str(Tnow))
+
     old_lista_jogos = Jogo.objects.filter(epoca__numeracao_epoca = epoca_num).order_by('-data')
-    #logging.warning('WUT!')
-    
-    Tnow = datetime.datetime.now() - Tinit
-    #fError.write("\nStep 2: "+str(Tnow))
+
     lista_jogos = []
     for idx, jogo in enumerate(old_lista_jogos):
         if idx > 4:
             break
         if jogo.data < datetime.date.today():
             lista_jogos.append(jogo)
-    Tnow = datetime.datetime.now() - Tinit
-    #fError.write("\nStep 3: "+str(Tnow))        
+       
     lista_prox_jogos = []
     for idx, jogo in enumerate(old_lista_jogos):
         if idx > 4:
             break
         if jogo.data >= datetime.date.today():
             lista_prox_jogos.append(jogo)
-    Tnow = datetime.datetime.now() - Tinit
-    #fError.write("\nStep 4: "+str(Tnow))
+
     lista_clubes = []
     for item in Jogador.lista_clubes():
         for k, v in item.items():
             lista_clubes.append([k,v])
-    Tnow = datetime.datetime.now() - Tinit
-    #fError.write("\nStep 5: "+str(Tnow))
+
     lista_jogadores = epoca.lista_jogs('-pontuacao, -golos, -assistencias, -jogos, -vitorias, derrotas')
     lista_jog_mais_reg = epoca.lista_jogs('-jogos')[:5]
     lista_jog_mais_gol = epoca.lista_jogs('-golos, jogos, -vitorias')[:5]
     lista_jog_mais_ass = epoca.lista_jogs('-assistencias, jogos, -vitorias')[:5]
-    #fError.write("\nStep 6: "+str(Tnow))
+    cuurl = reverse('futebola:index')
+    is_home = True
     #media_idades = Jogador.media_idades()
     #media_golos_jogo = Jogo.media_golos_jogo(epoca_num)
     #media_golos_jogador = Jogador.media_golos_jogador(epoca_num)
     #media_assist_jogador = Jogador.media_assist_jogador(epoca_num)
-    Tnow = datetime.datetime.now() - Tinit
-    #fError.write("\nStep 7: "+str(Tnow))
+
     context = {
         'epocas': epocas,
         'epoca': epoca,
@@ -71,9 +65,11 @@ def index(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numerac
         #'media_golos_jogador' : media_golos_jogador,
         #'media_assist_jogador' : media_assist_jogador,
         'lista_jog_mais_gol' : lista_jog_mais_gol,
-        'lista_jog_mais_ass' : lista_jog_mais_ass
+        'lista_jog_mais_ass' : lista_jog_mais_ass,
+        'cuurl' : cuurl,
+        'is_home' : is_home,
     }
-    Tnow = datetime.datetime.now() - Tinit
+
     #fError.write("\nStep Final: "+str(Tnow))
     #fError.write("\nFim: "+str(datetime.datetime.now()))
     #fError.write("\n"+str(connection.queries))
@@ -98,7 +94,8 @@ def jogador(request, jogador_id):
     
     context = {
         'epoca_num' : epoca_num,
-        'jogador' : jogador
+        'jogador' : jogador,
+        'cuurl' : reverse('futebola:jogador'),
     }
         
     return render(request, 'futebola/jogador.html', context)
@@ -112,7 +109,7 @@ def numerosEpoca(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().
     percent_vitorias_jogador = epoca.percentVitorias()
     percent_derrotas_jogador = epoca.percentDerrotas()
     mais_jogos_jogador = epoca.lista_jogs('-jogos')[0]
-    vit_consec_jogador = epoca.vitoriasConsec()
+    vit_consec_jogador = epoca.vitoriasConsec()[0]
 
     context = {
         'epocas': epocas,
@@ -123,9 +120,52 @@ def numerosEpoca(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().
         'percent_derrotas_jogador' : percent_derrotas_jogador,
         'mais_jogos_jogador' : mais_jogos_jogador,
         'vit_consec_jogador' : vit_consec_jogador,
+        'cuurl' : reverse('futebola:numerosEpoca'),
     }
 
     return render(request, 'futebola/numEpoca.html', context)
+
+def regras(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
+    epocas = Epoca.objects.all()
+    epoca = get_object_or_404(Epoca, numeracao_epoca=epoca_num)
+
+    context = {
+        'epocas': epocas,
+        'epoca': epoca,
+        'cuurl' : reverse('futebola:regras'),
+    }
+
+    return render(request, 'futebola/regras.html', context)
+
+def tops(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
+    epocas = Epoca.objects.all()
+    epoca = get_object_or_404(Epoca, numeracao_epoca=epoca_num)
+    lista_jog_mais_reg = epoca.lista_jogs('-jogos')[:5]
+    lista_jog_mais_gol = epoca.lista_jogs('-golos, jogos, -vitorias')[:5]
+    lista_jog_mais_ass = epoca.lista_jogs('-assistencias, jogos, -vitorias')[:5]
+    lista_jog_mais_vit = epoca.lista_jogs('-vitorias, jogos')[:5]
+    lista_jog_mais_comb = epoca.lista_jogs('-golos, -assistencias')[:5]
+    lista_jog_golos_sof = epoca.media_golos_sofridos()[:5]
+
+    for jog in lista_jog_mais_comb:
+        soma = jog['golos']+jog['assistencias']
+        jog['combinado'] = soma
+
+    lista_jog_mais_comb = sorted(lista_jog_mais_comb, key=lambda k: k['combinado'], reverse=True)
+
+    context = {
+        'epocas': epocas,
+        'epoca': epoca,
+        'cuurl' : reverse('futebola:tops'),
+        'lista_jog_mais_gol' : lista_jog_mais_gol,
+        'lista_jog_mais_ass' : lista_jog_mais_ass,
+        'lista_jog_mais_reg': lista_jog_mais_reg,
+        'lista_jog_mais_vit' : lista_jog_mais_vit,
+        'lista_jog_mais_comb' : lista_jog_mais_comb,
+        'lista_jog_golos_sof' : lista_jog_golos_sof
+    }
+
+    return render(request, 'futebola/tops.html', context)
   
 def gerarEquipas(request):
     lista_jogadores = Jogador.objects.order_by('nome')
@@ -190,7 +230,8 @@ def gerarEquipas(request):
             'equipa1': equipa1,
             'equipa2': equipa2,
             'somae1' : sume1,
-            'somae2' : sume2
+            'somae2' : sume2,
+            'cuurl' : reverse('futebola:gerarEquipas'),
         }
         
         #return JsonResponse(post_list, safe=False)

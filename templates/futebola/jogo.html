@@ -1,62 +1,49 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'futebola/css/bootstrap.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'futebola/css/custom.css' %}" />
-    <script type="text/javascript" src="{% static 'futebola/js/jquery-3.2.1.min.js' %}" ></script>
-    <script type="text/javascript" src="{% static 'futebola/js/custom.js' %}" ></script>
-</head>
-<body>
-    <div class="spacer"></div>
-    <div class="container">
-      <div class="row">
-          <div class="col-sm-10 col-sm-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading">{{ jogo }}</div>
-                <div class="panel-body">
-                {% if lista_equipa %}
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th colspan="6" style="text-align: center;"><h3 style="margin-top: 10px;">Equipa A <span style="color: dimgray; margin-left: 60px;">{{ jogo.resultado_a }}</span> - <span style="color: dimgray; margin-right: 60px;">{{ jogo.resultado_b }}</span> Equipa B</h3></th>
-                                </tr>
-                                <tr>
-                                    <th>Jogador</th>
-                                    <th style="text-align: center;">Assis.</th>
-                                    <th style="text-align: center;">Golos</th>
-                                    <th style="text-align: center;">Golos</th>
-                                    <th style="text-align: center;">Assis.</th>
-                                    <th style="text-align: right;">Jogador</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for fichas in lista_equipa %}
-                                <tr>
-                                    {% for ficha in fichas %}
-                                    <td id="nome-{{ ficha.equipa }}-{{ ficha.ficha_id }}">
-                                        {% if ficha.jogador.jogador_id %}
-                                        <a href="{% url 'futebola:jogador' ficha.jogador.jogador_id %}">
-                                        {{ ficha.jogador }}
-                                        </a>
-                                        {% endif %}
-                                    </td> 
-                                    <td style="text-align: center;">{{ ficha.assistencias }}</td>
-                                    <td style="text-align: center;" id="golos-{{ ficha.equipa }}-{{ ficha.ficha_id }}">{{ ficha.golos }}</td>
-                                    {% endfor %}
-                                </tr>
+{% extends "futebola/layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-1">
+        <div class="panel panel-default">
+            <div class="panel-heading">{{ jogo }}</div>
+            <div class="panel-body">
+            {% if lista_equipa %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th colspan="6" style="text-align: center;"><h3 style="margin-top: 10px;">Equipa A <span style="color: dimgray; margin-left: 60px;">{{ jogo.resultado_a }}</span> - <span style="color: dimgray; margin-right: 60px;">{{ jogo.resultado_b }}</span> Equipa B</h3></th>
+                            </tr>
+                            <tr>
+                                <th>Jogador</th>
+                                <th style="text-align: center;">Assis.</th>
+                                <th style="text-align: center;">Golos</th>
+                                <th style="text-align: center;">Golos</th>
+                                <th style="text-align: center;">Assis.</th>
+                                <th style="text-align: right;">Jogador</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for fichas in lista_equipa %}
+                            <tr>
+                                {% for ficha in fichas %}
+                                <td id="nome-{{ ficha.equipa }}-{{ ficha.ficha_id }}">
+                                    {% if ficha.jogador.jogador_id %}
+                                    <a href="{% url 'futebola:jogador' ficha.jogador.jogador_id %}">
+                                    {{ ficha.jogador }}
+                                    </a>
+                                    {% endif %}
+                                </td> 
+                                <td style="text-align: center;">{{ ficha.assistencias }}</td>
+                                <td style="text-align: center;" id="golos-{{ ficha.equipa }}-{{ ficha.ficha_id }}">{{ ficha.golos }}</td>
                                 {% endfor %}
-                            </tbody>
-                        </table>
-                {% else %}
-                    Sem dados para mostrar!
-                {% endif %}
-                <div id="back" class="btn btn-default">Voltar</div>
-                </div>
-                </div>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            {% else %}
+                Sem dados para mostrar!
+            {% endif %}
             </div>
         </div>
-      </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

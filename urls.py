@@ -10,8 +10,18 @@ urlpatterns = [
     url(r'^(?P<epoca_num>[0-9]+)/$', views.index, name='index'),
     # ex: /futebola/jogo/5/
     url(r'^jogo/(?P<jogo_id>[0-9]+)/$', views.jogo, name='jogo'),
+    # ex: /futebola/jogador/
+    url(r'^jogador/$', views.jogador, name='jogador'),
     # ex: /futebola/jogador/5/
     url(r'^jogador/(?P<jogador_id>[0-9]+)/$', views.jogador, name='jogador'),
+    # ex: /futebola/regras/
+    url(r'^regras/$', views.regras, name='regras'),
+    # ex: /futebola/regras/5/
+    url(r'^regras/(?P<epoca_num>[0-9]+)/$', views.regras, name='regras'),
+    # ex: /futebola/tops/
+    url(r'^tops/$', views.tops, name='tops'),
+    # ex: /futebola/tops/5/
+    url(r'^tops/(?P<epoca_num>[0-9]+)/$', views.tops, name='tops'),
     # ex: /futebola/gerar/
     url(r'^gerar/', views.gerarEquipas, name='gerarEquipas'),
     # ex: /futebola/numepoca/

@@ -274,6 +274,13 @@ class Epoca(models.Model):
             
         return lista
 
+    def media_golos_sofridos(self):
+        cursor = connection.cursor()
+        cursor.execute('SELECT jogador_id, nome, ROUND(golos_sofridos/jogos, 2) as media_golos_sofridos FROM (SELECT `futebola_jogador`.`jogador_id`, `futebola_jogador`.`nome`, SUM(( CASE WHEN equipa = "equipa_a" THEN resultado_b WHEN equipa = "equipa_b" THEN resultado_a ELSE 0 END )) AS golos_sofridos, COUNT(ficha_id) AS jogos FROM `futebola_ficha_de_jogo` INNER JOIN `futebola_jogo` ON (`futebola_ficha_de_jogo`.`jogo_id` = `futebola_jogo`.`jogo_id`) INNER JOIN `futebola_epoca` ON (`futebola_jogo`.`epoca_id` = `futebola_epoca`.`epoca_id`) INNER JOIN `futebola_jogador` ON (`futebola_ficha_de_jogo`.`jogador_id` = `futebola_jogador`.`jogador_id`) WHERE ( `futebola_epoca`.`numeracao_epoca` = '+str(self.numeracao_epoca)+' AND now() > date_add(data, INTERVAL 22 HOUR) ) GROUP BY `futebola_jogador`.`jogador_id`, `futebola_jogador`.`nome`) as golos_sofridos WHERE jogos>5 ORDER BY media_golos_sofridos')
+        lista = self.dictfetchall(cursor)
+            
+        return lista
+
     def media_golos_jogador(self):      
         jogadores = self.lista_jogs('-jogos')
         total_jogos = jogadores[0]['jogos']
@@ -364,8 +371,7 @@ class Epoca(models.Model):
     def vitoriasConsec(self):
         jogadores = self.lista_jogs('-jogos')
         cursor = connection.cursor()
-        jogador_final = 0
-        soma_f = 0
+        lista = []
 
         for jog in jogadores:
         
@@ -381,16 +387,15 @@ class Epoca(models.Model):
                     if soma_a > soma_t:
                         soma_t = soma_a
                     soma_a = 0
-            if soma_t > soma_f:
-                soma_f = soma_t
-                jogador_final = jog
-
-        dict = {
-            "nome" : jogador_final['nome'],
-            "valor" : soma_f
-        }
+            dict = {
+                "nome" : jog['nome'],
+                "valor" : soma_t
+            }
+            lista.append(dict);
         
-        return dict
+        lista = sorted(lista, key=lambda k: k['valor'], reverse=True)
+
+        return lista
 
 
     @staticmethod

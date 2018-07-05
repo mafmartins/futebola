@@ -1,0 +1,170 @@
+{% extends "futebola/layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">Melhor Marcador</div>
+            <div class="panel-body">
+            {% if lista_jog_mais_reg %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th class="text-center">Golos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for jogador in lista_jog_mais_gol %}
+                            <tr>
+                                <td>{{ jogador.nome }}</td>
+                                <td class="text-center">{{ jogador.golos }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            {% else %}
+                Sem dados para mostrar!
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">Mais Assistências</div>
+            <div class="panel-body">
+            {% if lista_jog_mais_reg %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th class="text-center">Assis.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for jogador in lista_jog_mais_ass %}
+                            <tr>
+                                <td>{{ jogador.nome }}</td>
+                                <td class="text-center">{{ jogador.assistencias }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            {% else %}
+                Sem dados para mostrar!
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">Mais Regular</div>
+            <div class="panel-body">
+            {% if lista_jog_mais_reg %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th class="text-center">Jogos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for jogador in lista_jog_mais_reg %}
+                            <tr>
+                                <td>{{ jogador.nome }}</td>
+                                <td class="text-center">{{ jogador.jogos }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            {% else %}
+                Sem dados para mostrar!
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">Mais vitórias</div>
+            <div class="panel-body">
+            {% if lista_jog_mais_reg %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th class="text-center">Vitórias</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for jogador in lista_jog_mais_vit %}
+                            <tr>
+                                <td>{{ jogador.nome }}</td>
+                                <td class="text-center">{{ jogador.vitorias }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            {% else %}
+                Sem dados para mostrar!
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">Combinado de Golos e Assistências</div>
+            <div class="panel-body">
+            {% if lista_jog_mais_reg %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th class="text-center">Combinado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for jogador in lista_jog_mais_comb %}
+                            <tr>
+                                <td>{{ jogador.nome }}</td>
+                                <td class="text-center">{{ jogador.golos|add:jogador.assistencias }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            {% else %}
+                Sem dados para mostrar!
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">Golos Sofridos por Jogo</div>
+            <div class="panel-body">
+            {% if lista_jog_mais_reg %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th class="text-center">Golos Sofridos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for jogador in lista_jog_golos_sof %}
+                            <tr>
+                                <td>{{ jogador.nome }}</td>
+                                <td class="text-center">{{ jogador.media_golos_sofridos }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            {% else %}
+                Sem dados para mostrar!
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
