@@ -283,8 +283,6 @@ class Epoca(models.Model):
 
     def media_golos_jogador(self):      
         jogadores = self.lista_jogs('-jogos')
-        total_jogos = jogadores[0]['jogos']
-        soma = 0
         media = 0
         jogador_final = 0
 
@@ -297,10 +295,16 @@ class Epoca(models.Model):
                     media = n_media
                     jogador_final = jog
 
-        dict = {
-            "nome" : jogador_final['nome'],
-            "valor" : float("{0:.2f}".format(media))
-        }
+        if jogador_final == 0:
+            dict = {
+                "nome" : 'Sem jogos suficientes.',
+                "valor" : 'Só são contabilizados dados após 5 jogos efetuados na época.'
+            }
+        else:
+            dict = {
+                "nome" : jogador_final['nome'],
+                "valor" : float("{0:.2f}".format(media))
+            }
         
         return dict
     
@@ -319,10 +323,16 @@ class Epoca(models.Model):
                     media = n_media
                     jogador_final = jog
 
-        dict = {
-            "nome" : jogador_final['nome'],
-            "valor" : float("{0:.2f}".format(media))
-        }
+        if jogador_final == 0:
+            dict = {
+                "nome" : 'Sem jogos suficientes.',
+                "valor" : 'Só são contabilizados dados após 5 jogos efetuados na época.'
+            }
+        else:
+            dict = {
+                "nome" : jogador_final['nome'],
+                "valor" : float("{0:.2f}".format(media))
+            }
         
         return dict
 
@@ -339,11 +349,17 @@ class Epoca(models.Model):
                 if n_percent > percent:
                     percent = n_percent
                     jogador_final = jog
-
-        dict = {
-            "nome" : jogador_final['nome'],
-            "valor" : float("{0:.2f}".format(percent))
-        }
+        
+        if jogador_final == 0:
+            dict = {
+                "nome" : 'Sem jogos suficientes.',
+                "valor" : 'Só são contabilizados dados após 1 jogo efetuado na época.'
+            }
+        else:
+            dict = {
+                "nome" : jogador_final['nome'],
+                "valor" : float("{0:.2f}".format(percent))
+            }
         
         return dict
 
@@ -361,10 +377,16 @@ class Epoca(models.Model):
                     percent = n_percent
                     jogador_final = jog
 
-        dict = {
-            "nome" : jogador_final['nome'],
-            "valor" : float("{0:.2f}".format(percent))
-        }
+        if jogador_final == 0:
+            dict = {
+                "nome" : 'Sem jogos suficientes.',
+                "valor" : 'Só são contabilizados dados após 1 jogo efetuado na época.'
+            }
+        else:
+            dict = {
+                "nome" : jogador_final['nome'],
+                "valor" : float("{0:.2f}".format(percent))
+            }
         
         return dict
 
