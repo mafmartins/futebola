@@ -27,6 +27,9 @@ class Jogador(models.Model):
     garra = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
     experiencia = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
     
+    class Meta:
+        ordering = ['nome']
+        
     def __str__(self):
         return u"%s" % self.nome
     
@@ -180,6 +183,9 @@ class Jogo(models.Model):
     resultado_b = models.IntegerField(default=0)
     epoca = models.ForeignKey('Epoca', on_delete=models.CASCADE, null=True)
     
+    class Meta:
+        ordering = ['-data']
+    
     def __str__(self):
         return u"%s | %s" % (self.local, self.data)
     
@@ -263,6 +269,9 @@ class Epoca(models.Model):
     valor_empate = models.IntegerField(default=0)
     valor_golos = models.IntegerField(default=0)
     valor_assistencias = models.IntegerField(default=0)
+    
+    class Meta:
+        ordering = ['-numeracao_epoca']
     
     def __str__(self):
         return u"Época %s - %s" % (self.numeracao_epoca, self.inicio.year)
