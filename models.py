@@ -9,6 +9,188 @@ from django.utils.encoding import python_2_unicode_compatible
 
 
 @python_2_unicode_compatible
+class Epoca(models.Model):
+    epoca_id = models.AutoField(primary_key=True)
+    numeracao_epoca = models.IntegerField(unique=True, default=0)
+    inicio = models.DateField(default=datetime.date.today)
+    fim = models.DateField(default=datetime.date.today)
+    valor_participacao = models.IntegerField(default=0)
+    valor_vitoria = models.IntegerField(default=0)
+    valor_empate = models.IntegerField(default=0)
+    valor_golos = models.IntegerField(default=0)
+    valor_assistencias = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['-numeracao_epoca']
+
+    def __str__(self):
+        return u"Época %s - %s" % (self.numeracao_epoca, self.inicio.year)
+
+    def lista_jogs(self, order_by):
+        cursor = connection.cursor()
+        cursor.execute('SELECT *, vitorias*'+str(self.valor_vitoria)+' + empates*'+str(self.valor_empate)+' + jogos*'+str(self.valor_participacao)+' + golos*'+str(self.valor_golos)+' + assistencias*'+str(self.valor_assistencias)+' AS pontuacao FROM ( SELECT `futebola_jogador`.`nome`, `futebola_jogador`.`jogador_id`, SUM(( CASE WHEN equipa = "equipa_a" AND resultado_a > resultado_b THEN 1 WHEN equipa = "equipa_b" AND resultado_b > resultado_a THEN 1 ELSE 0 END )) AS vitorias, SUM(( CASE WHEN equipa = "equipa_a" AND resultado_a < resultado_b THEN 1 WHEN equipa = "equipa_b" AND resultado_b < resultado_a THEN 1 ELSE 0 END )) AS derrotas, SUM(( CASE WHEN resultado_a = resultado_b THEN 1 ELSE 0 END )) AS empates, SUM(golos) AS golos, SUM(assistencias) AS assistencias, COUNT(ficha_id) AS jogos FROM `futebola_ficha_de_jogo` INNER JOIN `futebola_jogo` ON (`futebola_ficha_de_jogo`.`jogo_id` = `futebola_jogo`.`jogo_id`) INNER JOIN `futebola_epoca` ON (`futebola_jogo`.`epoca_id` = `futebola_epoca`.`epoca_id`) INNER JOIN `futebola_jogador` ON (`futebola_ficha_de_jogo`.`jogador_id` = `futebola_jogador`.`jogador_id`) WHERE ( `futebola_epoca`.`numeracao_epoca` = '+str(self.numeracao_epoca)+' AND now() > date_add(data, INTERVAL 22 HOUR) ) GROUP BY `futebola_jogador`.`nome`,`futebola_jogador`.`jogador_id` ) AS jogadores ORDER BY '+order_by)
+        lista = self.dictfetchall(cursor)
+
+        return lista
+
+    def media_golos_sofridos(self):
+        cursor = connection.cursor()
+        cursor.execute('SELECT jogador_id, nome, ROUND(golos_sofridos/jogos, 2) as media_golos_sofridos FROM (SELECT `futebola_jogador`.`jogador_id`, `futebola_jogador`.`nome`, SUM(( CASE WHEN equipa = "equipa_a" THEN resultado_b WHEN equipa = "equipa_b" THEN resultado_a ELSE 0 END )) AS golos_sofridos, COUNT(ficha_id) AS jogos FROM `futebola_ficha_de_jogo` INNER JOIN `futebola_jogo` ON (`futebola_ficha_de_jogo`.`jogo_id` = `futebola_jogo`.`jogo_id`) INNER JOIN `futebola_epoca` ON (`futebola_jogo`.`epoca_id` = `futebola_epoca`.`epoca_id`) INNER JOIN `futebola_jogador` ON (`futebola_ficha_de_jogo`.`jogador_id` = `futebola_jogador`.`jogador_id`) WHERE ( `futebola_epoca`.`numeracao_epoca` = ' +
+                       str(self.numeracao_epoca)+' AND now() > date_add(data, INTERVAL 22 HOUR) ) GROUP BY `futebola_jogador`.`jogador_id`, `futebola_jogador`.`nome`) as golos_sofridos WHERE jogos>5 ORDER BY media_golos_sofridos')
+        lista = self.dictfetchall(cursor)
+
+        return lista
+
+    def media_golos_jogador(self):
+        jogadores = self.lista_jogs('-jogos')
+        media = 0
+        jogador_final = 0
+
+        for jog in jogadores:
+            soma = 0
+            n_media = 0
+            if jog['jogos'] >= 5:
+                n_media = jog['golos'] / jog['jogos']
+                if n_media > media:
+                    media = n_media
+                    jogador_final = jog
+
+        if jogador_final == 0:
+            dict = {
+                "nome": 'Sem jogos suficientes.',
+                "valor": 'Só são contabilizados dados após 5 jogos efetuados na época.'
+            }
+        else:
+            dict = {
+                "nome": jogador_final['nome'],
+                "valor": float("{0:.2f}".format(media))
+            }
+
+        return dict
+
+    def media_assist_jogador(self):
+        jogadores = self.lista_jogs('-jogos')
+        soma = 0
+        media = 0
+        jogador_final = 0
+
+        for jog in jogadores:
+            soma = 0
+            n_media = 0
+            if jog['jogos'] >= 5:
+                n_media = jog['assistencias'] / jog['jogos']
+                if n_media > media:
+                    media = n_media
+                    jogador_final = jog
+
+        if jogador_final == 0:
+            dict = {
+                "nome": 'Sem jogos suficientes.',
+                "valor": 'Só são contabilizados dados após 5 jogos efetuados na época.'
+            }
+        else:
+            dict = {
+                "nome": jogador_final['nome'],
+                "valor": float("{0:.2f}".format(media))
+            }
+
+        return dict
+
+    def percentVitorias(self):
+        jogadores = self.lista_jogs('-jogos')
+        total_jogos = jogadores[0]['jogos']
+        soma = 0
+        percent = 0
+        jogador_final = 0
+
+        for jog in jogadores:
+            if int(jog['jogos']) > total_jogos/2:
+                n_percent = (jog['vitorias'] * 100) / jog['jogos']
+                if n_percent > percent:
+                    percent = n_percent
+                    jogador_final = jog
+
+        if jogador_final == 0:
+            dict = {
+                "nome": 'Sem jogos suficientes.',
+                "valor": 'Só são contabilizados dados após 1 jogo efetuado na época.'
+            }
+        else:
+            dict = {
+                "nome": jogador_final['nome'],
+                "valor": float("{0:.2f}".format(percent))
+            }
+
+        return dict
+
+    def percentDerrotas(self):
+        jogadores = self.lista_jogs('-jogos')
+        total_jogos = jogadores[0]['jogos']
+        soma = 0
+        percent = 0
+        jogador_final = 0
+
+        for jog in jogadores:
+            if int(jog['jogos']) > total_jogos/2:
+                n_percent = (jog['derrotas'] * 100) / jog['jogos']
+                if n_percent > percent:
+                    percent = n_percent
+                    jogador_final = jog
+
+        if jogador_final == 0:
+            dict = {
+                "nome": 'Sem jogos suficientes.',
+                "valor": 'Só são contabilizados dados após 1 jogo efetuado na época.'
+            }
+        else:
+            dict = {
+                "nome": jogador_final['nome'],
+                "valor": float("{0:.2f}".format(percent))
+            }
+
+        return dict
+
+    def vitoriasConsec(self):
+        jogadores = self.lista_jogs('-jogos')
+        cursor = connection.cursor()
+        lista = []
+
+        for jog in jogadores:
+
+            cursor.execute('SELECT CASE WHEN equipa = "equipa_a" AND resultado_a > resultado_b THEN 1 WHEN equipa = "equipa_b" AND resultado_b > resultado_a THEN 1 ELSE 0 END AS vitoria FROM `futebola_ficha_de_jogo` INNER JOIN `futebola_jogo` ON (`futebola_ficha_de_jogo`.`jogo_id` = `futebola_jogo`.`jogo_id`) INNER JOIN `futebola_epoca` ON (`futebola_jogo`.`epoca_id` = `futebola_epoca`.`epoca_id`) INNER JOIN `futebola_jogador` ON (`futebola_ficha_de_jogo`.`jogador_id` = `futebola_jogador`.`jogador_id`) WHERE (`futebola_ficha_de_jogo`.`jogador_id` = ' +
+                           str(jog['jogador_id'])+' AND `futebola_epoca`.`numeracao_epoca` = '+str(self.numeracao_epoca)+')')
+
+            jogos = self.dictfetchall(cursor)
+            soma_t = 0
+            soma_a = 0
+            for jogo in jogos:
+                if jogo['vitoria'] > 0:
+                    soma_a += 1
+                else:
+                    if soma_a > soma_t:
+                        soma_t = soma_a
+                    soma_a = 0
+            dict = {
+                "nome": jog['nome'],
+                "valor": soma_t
+            }
+            lista.append(dict)
+
+        lista = sorted(lista, key=lambda k: k['valor'], reverse=True)
+
+        return lista
+
+    @staticmethod
+    def dictfetchall(cursor):
+        "Returns all rows from a cursor as a dict"
+        desc = cursor.description
+        return [
+            dict(zip([col[0] for col in desc], row))
+            for row in cursor.fetchall()
+        ]
+
+
+@python_2_unicode_compatible
 class Jogador(models.Model):
     jogador_id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=100)
@@ -342,185 +524,3 @@ class Ficha_de_jogo(models.Model):
 
     def __str__(self):
         return u"%s | %s" % (self.jogador, self.jogo)
-
-
-@python_2_unicode_compatible
-class Epoca(models.Model):
-    epoca_id = models.AutoField(primary_key=True)
-    numeracao_epoca = models.IntegerField(unique=True, default=0)
-    inicio = models.DateField(default=datetime.date.today)
-    fim = models.DateField(default=datetime.date.today)
-    valor_participacao = models.IntegerField(default=0)
-    valor_vitoria = models.IntegerField(default=0)
-    valor_empate = models.IntegerField(default=0)
-    valor_golos = models.IntegerField(default=0)
-    valor_assistencias = models.IntegerField(default=0)
-
-    class Meta:
-        ordering = ['-numeracao_epoca']
-
-    def __str__(self):
-        return u"Época %s - %s" % (self.numeracao_epoca, self.inicio.year)
-
-    def lista_jogs(self, order_by):
-        cursor = connection.cursor()
-        cursor.execute('SELECT *, vitorias*'+str(self.valor_vitoria)+' + empates*'+str(self.valor_empate)+' + jogos*'+str(self.valor_participacao)+' + golos*'+str(self.valor_golos)+' + assistencias*'+str(self.valor_assistencias)+' AS pontuacao FROM ( SELECT `futebola_jogador`.`nome`, `futebola_jogador`.`jogador_id`, SUM(( CASE WHEN equipa = "equipa_a" AND resultado_a > resultado_b THEN 1 WHEN equipa = "equipa_b" AND resultado_b > resultado_a THEN 1 ELSE 0 END )) AS vitorias, SUM(( CASE WHEN equipa = "equipa_a" AND resultado_a < resultado_b THEN 1 WHEN equipa = "equipa_b" AND resultado_b < resultado_a THEN 1 ELSE 0 END )) AS derrotas, SUM(( CASE WHEN resultado_a = resultado_b THEN 1 ELSE 0 END )) AS empates, SUM(golos) AS golos, SUM(assistencias) AS assistencias, COUNT(ficha_id) AS jogos FROM `futebola_ficha_de_jogo` INNER JOIN `futebola_jogo` ON (`futebola_ficha_de_jogo`.`jogo_id` = `futebola_jogo`.`jogo_id`) INNER JOIN `futebola_epoca` ON (`futebola_jogo`.`epoca_id` = `futebola_epoca`.`epoca_id`) INNER JOIN `futebola_jogador` ON (`futebola_ficha_de_jogo`.`jogador_id` = `futebola_jogador`.`jogador_id`) WHERE ( `futebola_epoca`.`numeracao_epoca` = '+str(self.numeracao_epoca)+' AND now() > date_add(data, INTERVAL 22 HOUR) ) GROUP BY `futebola_jogador`.`nome`,`futebola_jogador`.`jogador_id` ) AS jogadores ORDER BY '+order_by)
-        lista = self.dictfetchall(cursor)
-
-        return lista
-
-    def media_golos_sofridos(self):
-        cursor = connection.cursor()
-        cursor.execute('SELECT jogador_id, nome, ROUND(golos_sofridos/jogos, 2) as media_golos_sofridos FROM (SELECT `futebola_jogador`.`jogador_id`, `futebola_jogador`.`nome`, SUM(( CASE WHEN equipa = "equipa_a" THEN resultado_b WHEN equipa = "equipa_b" THEN resultado_a ELSE 0 END )) AS golos_sofridos, COUNT(ficha_id) AS jogos FROM `futebola_ficha_de_jogo` INNER JOIN `futebola_jogo` ON (`futebola_ficha_de_jogo`.`jogo_id` = `futebola_jogo`.`jogo_id`) INNER JOIN `futebola_epoca` ON (`futebola_jogo`.`epoca_id` = `futebola_epoca`.`epoca_id`) INNER JOIN `futebola_jogador` ON (`futebola_ficha_de_jogo`.`jogador_id` = `futebola_jogador`.`jogador_id`) WHERE ( `futebola_epoca`.`numeracao_epoca` = ' +
-                       str(self.numeracao_epoca)+' AND now() > date_add(data, INTERVAL 22 HOUR) ) GROUP BY `futebola_jogador`.`jogador_id`, `futebola_jogador`.`nome`) as golos_sofridos WHERE jogos>5 ORDER BY media_golos_sofridos')
-        lista = self.dictfetchall(cursor)
-
-        return lista
-
-    def media_golos_jogador(self):
-        jogadores = self.lista_jogs('-jogos')
-        media = 0
-        jogador_final = 0
-
-        for jog in jogadores:
-            soma = 0
-            n_media = 0
-            if jog['jogos'] >= 5:
-                n_media = jog['golos'] / jog['jogos']
-                if n_media > media:
-                    media = n_media
-                    jogador_final = jog
-
-        if jogador_final == 0:
-            dict = {
-                "nome": 'Sem jogos suficientes.',
-                "valor": 'Só são contabilizados dados após 5 jogos efetuados na época.'
-            }
-        else:
-            dict = {
-                "nome": jogador_final['nome'],
-                "valor": float("{0:.2f}".format(media))
-            }
-
-        return dict
-
-    def media_assist_jogador(self):
-        jogadores = self.lista_jogs('-jogos')
-        soma = 0
-        media = 0
-        jogador_final = 0
-
-        for jog in jogadores:
-            soma = 0
-            n_media = 0
-            if jog['jogos'] >= 5:
-                n_media = jog['assistencias'] / jog['jogos']
-                if n_media > media:
-                    media = n_media
-                    jogador_final = jog
-
-        if jogador_final == 0:
-            dict = {
-                "nome": 'Sem jogos suficientes.',
-                "valor": 'Só são contabilizados dados após 5 jogos efetuados na época.'
-            }
-        else:
-            dict = {
-                "nome": jogador_final['nome'],
-                "valor": float("{0:.2f}".format(media))
-            }
-
-        return dict
-
-    def percentVitorias(self):
-        jogadores = self.lista_jogs('-jogos')
-        total_jogos = jogadores[0]['jogos']
-        soma = 0
-        percent = 0
-        jogador_final = 0
-
-        for jog in jogadores:
-            if int(jog['jogos']) > total_jogos/2:
-                n_percent = (jog['vitorias'] * 100) / jog['jogos']
-                if n_percent > percent:
-                    percent = n_percent
-                    jogador_final = jog
-
-        if jogador_final == 0:
-            dict = {
-                "nome": 'Sem jogos suficientes.',
-                "valor": 'Só são contabilizados dados após 1 jogo efetuado na época.'
-            }
-        else:
-            dict = {
-                "nome": jogador_final['nome'],
-                "valor": float("{0:.2f}".format(percent))
-            }
-
-        return dict
-
-    def percentDerrotas(self):
-        jogadores = self.lista_jogs('-jogos')
-        total_jogos = jogadores[0]['jogos']
-        soma = 0
-        percent = 0
-        jogador_final = 0
-
-        for jog in jogadores:
-            if int(jog['jogos']) > total_jogos/2:
-                n_percent = (jog['derrotas'] * 100) / jog['jogos']
-                if n_percent > percent:
-                    percent = n_percent
-                    jogador_final = jog
-
-        if jogador_final == 0:
-            dict = {
-                "nome": 'Sem jogos suficientes.',
-                "valor": 'Só são contabilizados dados após 1 jogo efetuado na época.'
-            }
-        else:
-            dict = {
-                "nome": jogador_final['nome'],
-                "valor": float("{0:.2f}".format(percent))
-            }
-
-        return dict
-
-    def vitoriasConsec(self):
-        jogadores = self.lista_jogs('-jogos')
-        cursor = connection.cursor()
-        lista = []
-
-        for jog in jogadores:
-
-            cursor.execute('SELECT CASE WHEN equipa = "equipa_a" AND resultado_a > resultado_b THEN 1 WHEN equipa = "equipa_b" AND resultado_b > resultado_a THEN 1 ELSE 0 END AS vitoria FROM `futebola_ficha_de_jogo` INNER JOIN `futebola_jogo` ON (`futebola_ficha_de_jogo`.`jogo_id` = `futebola_jogo`.`jogo_id`) INNER JOIN `futebola_epoca` ON (`futebola_jogo`.`epoca_id` = `futebola_epoca`.`epoca_id`) INNER JOIN `futebola_jogador` ON (`futebola_ficha_de_jogo`.`jogador_id` = `futebola_jogador`.`jogador_id`) WHERE (`futebola_ficha_de_jogo`.`jogador_id` = ' +
-                           str(jog['jogador_id'])+' AND `futebola_epoca`.`numeracao_epoca` = '+str(self.numeracao_epoca)+')')
-
-            jogos = self.dictfetchall(cursor)
-            soma_t = 0
-            soma_a = 0
-            for jogo in jogos:
-                if jogo['vitoria'] > 0:
-                    soma_a += 1
-                else:
-                    if soma_a > soma_t:
-                        soma_t = soma_a
-                    soma_a = 0
-            dict = {
-                "nome": jog['nome'],
-                "valor": soma_t
-            }
-            lista.append(dict)
-
-        lista = sorted(lista, key=lambda k: k['valor'], reverse=True)
-
-        return lista
-
-    @staticmethod
-    def dictfetchall(cursor):
-        "Returns all rows from a cursor as a dict"
-        desc = cursor.description
-        return [
-            dict(zip([col[0] for col in desc], row))
-            for row in cursor.fetchall()
-        ]
