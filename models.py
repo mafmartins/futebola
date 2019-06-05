@@ -397,9 +397,9 @@ class Jogador(models.Model):
             '-pontuacao, -golos, -assistencias, -jogos, -vitorias, derrotas')
 
         for i, jogador in enumerate(lista_jogadores):
-            if i < 10 and jogador["id"] == self.id and jogador["jogos"] >= 5:
+            if i < 10 and jogador["jogador_id"] == self.jogador_id and jogador["jogos"] >= 5:
                 rank = i
-            elif i >= 10 and jogador["id"] == self.id and jogador["jogos"] >= 5:
+            elif i >= 10 and jogador["jogador_id"] == self.jogador_id and jogador["jogos"] >= 5:
                 rank = 10
 
         pontos_rank = (abs(rank - 10) - 5) / 2
