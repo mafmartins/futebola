@@ -406,6 +406,9 @@ class Jogador(models.Model):
 
         return round(pontos_vitorias + pontos_rank)
 
+    def nota_final(self):
+        return self.nota + self.forma + self.moral
+
     @staticmethod
     def media_idades():
         jogadores = Jogador.objects.filter()
