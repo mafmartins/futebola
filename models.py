@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import unicode_literals, division
 
 from django.shortcuts import get_object_or_404
 from django.db import models, connection
@@ -192,8 +192,6 @@ class Jogador(models.Model):
         return pontos_forma
 
     def moral(self, epoca_num):
-        from __future__ import division
-
         vitorias = 0
 
         fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
