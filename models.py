@@ -355,7 +355,7 @@ class Jogador(models.Model):
         assis = 0
 
         fichas = Ficha_de_jogo.objects.filter(
-            jogador=self, jogo__epoca__numeracao_epoca=epoca_num).order_by("-id")[:5]
+            jogador=self, jogo__epoca__numeracao_epoca=epoca_num).order_by("-ficha_id")[:5]
 
         if len(fichas) == 5:
             for ficha in fichas:
@@ -377,7 +377,7 @@ class Jogador(models.Model):
         vitorias = 0
 
         fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
-            jogador=self, jogo__epoca__numeracao_epoca=epoca_num).order_by("-id")[:5]
+            jogador=self, jogo__epoca__numeracao_epoca=epoca_num).order_by("-ficha_id")[:5]
 
         if len(fichas) == 5:
             for ficha in fichas:
