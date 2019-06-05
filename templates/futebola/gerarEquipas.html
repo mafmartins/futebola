@@ -25,7 +25,6 @@
                                 <th>Fin</th>
                                 <th>Exp</th>
                                 <th>Nota</th>
-                                <th>Forma</th>
                                 <th>Moral</th>
                                 <th>Notal Final</th>
                                 <th style="text-align:center;">Sel.</th>
@@ -49,11 +48,10 @@
                                 <td>{{ jogador.finalizacao }}</td>
                                 <td>{{ jogador.experiencia }}</td>
                                 <td><b>{{ jogador.nota }}</b></td>
-                                <td><b>{{ jogador.forma }}</b></td>
                                 <td><b>{{ jogador.moral }}</b></td>
                                 <td><b>{{ jogador.nota_final }}</b></td>
                                 <td style="text-align:center;"><input id="{{ jogador.jogador_id }}" type="checkbox"
-                                        name="{{ jogador.jogador_id }}" value="{{ jogador.nota }}"></td>
+                                        name="{{ jogador.jogador_id }}" value="{{ jogador.nota_final }}"></td>
                             </tr>
                             {% endfor %}
                         </tbody>
