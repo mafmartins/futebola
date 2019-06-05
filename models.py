@@ -168,7 +168,7 @@ class Jogador(models.Model):
 
         return pontos
 
-    def forma(self, epoca_num):
+    def forma(self, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
         golos = 0
         assis = 0
 
@@ -191,7 +191,7 @@ class Jogador(models.Model):
 
         return pontos_forma
 
-    def moral(self, epoca_num):
+    def moral(self, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
         vitorias = 0
 
         fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
