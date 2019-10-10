@@ -28,4 +28,6 @@ urlpatterns = [
     url(r'^numepoca/$', views.numerosEpoca, name='numerosEpoca'),
     # ex: /futebola/numepoca/5/
     url(r'^numepoca/(?P<epoca_num>[0-9]+)/$', views.numerosEpoca, name='numerosEpoca'),
+    # ex: /futebola/penalizacoes/5/
+    url(r'^penalizacoes/(?P<epoca_num>[0-9]+)/$', views.penalizacoes, name='penalizacoes'),
 ]

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
-from .models import Jogador, Jogo, Ficha_de_jogo, Epoca
+from .models import Jogador, Jogo, Ficha_de_jogo, Epoca, Penalizacao
 import datetime
 import json
 from django.db.models import Sum, Count
@@ -178,6 +178,15 @@ def tops(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeraca
     }
 
     return render(request, 'futebola/tops.html', context)
+    
+def penalizacoes(request, , epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
+    penalizacoes = Penalizacao.objects.filter(epoca=epoca_num)
+
+    context = {
+        'penalizacoes': penalizacoes
+    }
+
+    return render(request, 'futebola/penalizacoes.html', context)
 
 
 def gerarEquipas(request):

@@ -198,31 +198,31 @@ class Jogador(models.Model):
     data_nascimento = models.DateField(default=datetime.date.today)
     clube_favorito = models.CharField(max_length=100)
     guarda_redes = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     defesa = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     ataque = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     velocidade = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     resistencia = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     forca = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     tecnica = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     passe = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     remates_longe = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     finalizacao = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     posicionamento = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     garra = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     experiencia = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(100)])
+        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
 
     class Meta:
         ordering = ['nome']
@@ -527,3 +527,15 @@ class Ficha_de_jogo(models.Model):
 
     def __str__(self):
         return u"%s | %s" % (self.jogador, self.jogo)
+        
+@python_2_unicode_compatible
+class Penalizacao(models.Model):
+    penalizacao_id = models.AutoField(primary_key=True)
+    jogador = models.ForeignKey(Jogador, on_delete=models.CASCADE)
+    epoca = models.ForeignKey('Epoca', on_delete=models.CASCADE, null=True)
+    data = models.DateField(default=datetime.date.today)
+    valor = models.IntegerField(default=0)
+    motivo = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return u"%s | %s | %s | %s " % (self.data, self.jogador, self.motivo, self.valor)
