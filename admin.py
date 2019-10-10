@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from .models import Jogador, Jogo, Ficha_de_jogo, Epoca
+from .models import Jogador, Jogo, Ficha_de_jogo, Epoca, Penalizacao
 
 admin.site.register(Jogador)
 admin.site.register(Jogo)
