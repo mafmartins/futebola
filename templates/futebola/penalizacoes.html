@@ -6,7 +6,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">Penalizações</div>
         <div class="panel-body" style="overflow-y: scroll; height: 400px; padding:0;">
-        {% if lista_jogadores %}
+        {% if penalizacoes %}
                 <table class="table table-striped table-responsive" style="margin-bottom:0px;border:0;">
                     <thead>
                         <tr>
@@ -17,12 +17,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for jogador in lista_jogadores %}
+                        {% for penalizacao in penalizacoes %}
                         <tr>
-                            <td style="padding-left:2px;padding-right:2px;text-align:center;">{{ forloop.counter }}º</td>
-                            <td style="padding-left:2px;padding-right:2px;"><a href="{% url 'futebola:jogador' jogador.jogador_id %}">{{ jogador.nome }}</a></td>
-                            <td style="padding-left:2px;padding-right:2px;text-align:center;">{{ jogador.jogos }}</td>
-                            <td style="padding-left:2px;padding-right:2px;text-align:center;">{{ jogador.vitorias }}</td>
+                            <td style="padding-left:2px;padding-right:2px;text-align:center;">{{ penalizacao.data }}º</td>
+                            <td style="padding-left:2px;padding-right:2px;"><a href="{% url 'futebola:jogador' jogador.jogador_id %}">{{ penalizacao.jogador }}</a></td>
+                            <td style="padding-left:2px;padding-right:2px;text-align:center;">{{ penalizacao.motivo }}</td>
+                            <td style="padding-left:2px;padding-right:2px;text-align:center;">{{ penalizacao.valor }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
