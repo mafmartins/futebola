@@ -179,7 +179,7 @@ def tops(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeraca
 
     return render(request, 'futebola/tops.html', context)
     
-def penalizacoes(request, , epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
+def penalizacoes(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
     penalizacoes = Penalizacao.objects.filter(epoca=epoca_num)
 
     context = {
