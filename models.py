@@ -330,6 +330,8 @@ class Jogador(models.Model):
 
         fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
             jogador=self, jogo__epoca__numeracao_epoca=epoca_num)
+        penalizacoes = Penalizacao.objects.filter(
+            jogador=self, epoca__numeracao_epoca=epoca_num)
         epoca = Epoca.objects.filter(numeracao_epoca=epoca_num).first()
 
         for ficha in fichas:
@@ -347,6 +349,9 @@ class Jogador(models.Model):
                         pontos += epoca.valor_vitoria
                     elif ficha.jogo.resultado_a == ficha.jogo.resultado_b:
                         pontos += epoca.valor_empate
+                        
+        for penalizacao in penalizacoes:
+            pontos -= penalizacao.valor
 
         return pontos
 
