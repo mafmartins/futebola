@@ -330,9 +330,9 @@ class Jogador(models.Model):
 
         fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
             jogador=self, jogo__epoca__numeracao_epoca=epoca_num)
-        penalizacoes = Penalizacao.objects.filter(
-            jogador=self, epoca__numeracao_epoca=epoca_num)
         epoca = Epoca.objects.filter(numeracao_epoca=epoca_num).first()
+        penalizacoes = Penalizacao.objects.filter(
+            jogador=self, epoca=epoca)
 
         for ficha in fichas:
             if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
