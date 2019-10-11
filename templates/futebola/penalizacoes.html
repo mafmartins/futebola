@@ -22,7 +22,7 @@
                             <td style="padding-left:2px;padding-right:2px;text-align:center;">{{ penalizacao.data }}</td>
                             <td style="padding-left:2px;padding-right:2px;"><a href="{% url 'futebola:jogador' penalizacao.jogador.jogador_id %}">{{ penalizacao.jogador }}</a></td>
                             <td style="padding-left:2px;padding-right:2px;text-align:center;">{{ penalizacao.motivo }}</td>
-                            <td style="padding-left:2px;padding-right:2px;text-align:center;">{{ penalizacao.valor }}</td>
+                            <td style="padding-left:2px;padding-right:2px;text-align:center;">-{{ penalizacao.valor }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
