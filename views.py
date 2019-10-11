@@ -182,7 +182,7 @@ def tops(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeraca
 def penalizacoes(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca):
     epocas = Epoca.objects.all()
     epoca = get_object_or_404(Epoca, numeracao_epoca=epoca_num)
-    penalizacoes = Penalizacao.objects.filter(epoca__numeracao_epoca=epoca_num)
+    penalizacoes = Penalizacao.objects.filter(epoca__numeracao_epoca=epoca_num).order_by('-data')
 
     context = {
         'epocas': epocas,
