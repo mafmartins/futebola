@@ -187,7 +187,8 @@ def penalizacoes(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().
     context = {
         'epocas': epocas,
         'epoca': epoca,
-        'penalizacoes': penalizacoes
+        'penalizacoes': penalizacoes,
+        'cuurl': reverse('futebola:penalizacoes'),
     }
 
     return render(request, 'futebola/penalizacoes.html', context)
