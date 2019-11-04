@@ -155,7 +155,7 @@ def tops(request, epoca_num=Epoca.objects.order_by('-epoca_id').first().numeraca
     lista_jog_mais_ass = epoca.lista_jogs(
         '-assistencias, jogos, -vitorias')[:5]
     lista_jog_mais_vit = epoca.lista_jogs('-vitorias, jogos')[:5]
-    lista_jog_mais_comb = epoca.lista_jogs('-golos, -assistencias')[:5]
+    lista_jog_mais_comb = epoca.lista_jogs('-combinado')[:5]
     lista_jog_golos_sof = epoca.media_golos_sofridos()[:5]
 
     for jog in lista_jog_mais_comb:
