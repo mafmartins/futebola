@@ -87,9 +87,64 @@
                     </div>
                 </div>
                 <div id="back" class="btn btn-default">Voltar</div>
+								<div id="confirm" style="float: right;" class="btn btn-default">Criar fichas de jogo</div>
             </div>
         </div>
     </div>
 </div>
 </div>
+<script type="text/javascript"> 
+	 function getCookie(c_name)
+	 {
+	    if (document.cookie.length > 0)
+	    {
+	        c_start = document.cookie.indexOf(c_name + "=");
+	        if (c_start != -1)
+	        {
+	            c_start = c_start + c_name.length + 1;
+	            c_end = document.cookie.indexOf(";", c_start);
+	            if (c_end == -1) c_end = document.cookie.length;
+	            return unescape(document.cookie.substring(c_start,c_end));
+	        }
+	    }
+	    return "";
+	 }
+	 
+	 $.ajaxSetup({
+	 		headers: { "X-CSRFToken": getCookie("csrftoken") }
+	 });
+			
+   var equipaA = [];
+	 var equipaB = [];
+	 
+	 {% for jogador in equipa1 %}
+	 equipaA.push({{ jogador.jogador_id }})
+	 {% endfor %}
+	 
+	 {% for jogador in equipa2 %}
+	 equipaB.push({{ jogador.jogador_id }})
+	 {% endfor %}
+	 
+	 equipas = {
+		 "equipaA": equipaA,
+		 "equipaB": equipaB
+	 }
+	 
+	 $( document ).ready(function() {
+	     $("#confirm").click(function(){
+				 console.log(JSON.stringify(equipas));
+					 $.ajax({
+					     url: '/futebola/criar-equipas/',
+					     type: 'POST',
+					     contentType: 'application/json; charset=utf-8',
+					     data: JSON.stringify(equipas),
+					     dataType: 'text',
+					     success: function(result) {
+								 //alert(result);
+								 window.location.replace("/futebola/jogo/"+result+"/")
+					     }
+					 });
+	     });
+	 });
+</script>
 {% endblock %}

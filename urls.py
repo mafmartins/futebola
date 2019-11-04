@@ -24,6 +24,8 @@ urlpatterns = [
     url(r'^tops/(?P<epoca_num>[0-9]+)/$', views.tops, name='tops'),
     # ex: /futebola/gerar/
     url(r'^gerar/', views.gerarEquipas, name='gerarEquipas'),
+    # ex: /futebola/criar-equipas/
+    url(r'^criar-equipas/', views.criarEquipas, name='criarEquipas'),
     # ex: /futebola/numepoca/
     url(r'^numepoca/$', views.numerosEpoca, name='numerosEpoca'),
     # ex: /futebola/numepoca/5/

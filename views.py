@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 from .models import Jogador, Jogo, Ficha_de_jogo, Epoca, Penalizacao
 import datetime
 import json
@@ -266,6 +266,29 @@ def gerarEquipas(request):
 
         # return JsonResponse(post_list, safe=False)
         return render(request, 'futebola/verEquipasGeradas.html', context)
+        
+        
+def criarEquipas(request):
+
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+        
+        ultimoJogo = Jogo.objects.all().order_by("-jogo_id").first()
+        novoJogo = Jogo(local=ultimoJogo.local, epoca=Epoca.objects.order_by('-epoca_id').first())
+        novoJogo.save()
+        
+        for jogadorId in data["equipaA"]:
+            ficha = Ficha_de_jogo(jogador=Jogador.objects.get(pk=jogadorId), equipa="Equipa_A", jogo=novoJogo)
+            ficha.save()
+            
+        for jogadorId in data["equipaB"]:
+            ficha = Ficha_de_jogo(jogador=Jogador.objects.get(pk=jogadorId), equipa="Equipa_B", jogo=novoJogo)
+            ficha.save()
+        
+        return HttpResponse(novoJogo.jogo_id)
+        
+    return HttpResponseNotFound("Método incompatível")
 
 
 def team(t):
