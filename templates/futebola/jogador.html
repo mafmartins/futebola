@@ -15,10 +15,10 @@
                     <tbody>
                         <tr>
 														{% if jogador.foto %}
-														<td style="text-align: center;" rowspan="3"><img src="{{ jogador.foto.url }}" style="max-width:150px;"></td>
+														<td style="text-align: center;" rowspan="3"><img class="img-responsive" src="{{ jogador.foto.url }}"></td>
 														{% endif %}
-                            <td style="font-weight: bold">Data de Nascimento:</td>
-                            <td>{{ jogador.data_nascimento|date:"d-m-Y" }}</td>
+                            <td style="min-width:125px;font-weight: bold">Data de Nascimento:</td>
+                            <td style="min-width:125px;">{{ jogador.data_nascimento|date:"d-m-Y" }}</td>
                         </tr>
                         <tr>
                             <td style="font-weight: bold">Idade:</td>
