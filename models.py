@@ -197,6 +197,7 @@ class Jogador(models.Model):
     idade = models.IntegerField(default=0)
     data_nascimento = models.DateField(default=datetime.date.today)
     clube_favorito = models.CharField(max_length=100)
+    foto = models.ImageField(null=True)
     guarda_redes = models.PositiveIntegerField(
         default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
     defesa = models.PositiveIntegerField(
