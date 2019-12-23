@@ -13,12 +13,14 @@
                         </tr>
                     </thead>
                     <tbody>
+													{% if jogador.foto %}
+												<tr>
+														<td style="text-align: center;" colspan="2"><img class="img-responsive" style="max-width:150px" src="{{ jogador.foto.url }}"></td>
+												</tr>
+													{% endif %}
                         <tr>
-														{% if jogador.foto %}
-														<td style="text-align: center;" rowspan="3"><img class="img-responsive" src="{{ jogador.foto.url }}"></td>
-														{% endif %}
-                            <td style="min-width:125px;font-weight: bold">Data de Nascimento:</td>
-                            <td style="min-width:125px;">{{ jogador.data_nascimento|date:"d-m-Y" }}</td>
+                            <td style="font-weight: bold">Data de Nascimento:</td>
+                            <td>{{ jogador.data_nascimento|date:"d-m-Y" }}</td>
                         </tr>
                         <tr>
                             <td style="font-weight: bold">Idade:</td>
@@ -42,11 +44,11 @@
                    <thead>
                         <tr>
                             <th style="text-align:center;">Época</th>
-                            <th style="text-align:center;">Jogos</th>
-														<th style="text-align:center;">Vitórias</th>
-														<th style="text-align:center;">Golos</th>
-														<th style="text-align:center;">Assistências</th>
-														<th style="text-align:center;">Pontuação</th>
+                            <th style="text-align:center;">Jgs</th>
+														<th style="text-align:center;">Vts</th>
+														<th style="text-align:center;">Gls</th>
+														<th style="text-align:center;">Ass</th>
+														<th style="text-align:center;">Pnt</th>
                         </tr>
                     </thead>
                     <tbody>
