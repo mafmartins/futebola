@@ -1,5 +1,4 @@
 from django.template import Library
-from futebola.models import Jogador, Jogo, Ficha_de_jogo, Epoca
 
 register = Library()
 

@@ -97,10 +97,10 @@ def jogo(request, jogo_id):
 
 def jogador(request, jogador_id):
     jogador = get_object_or_404(Jogador, jogador_id=jogador_id)
-    epoca_num = Epoca.objects.order_by('-epoca_id').first().numeracao_epoca
+    epocas_obj = Epoca.objects.order_by('-epoca_id')
 
     context = {
-        'epoca_num': epoca_num,
+        'epocas_obj': epocas_obj,
         'jogador': jogador,
         'cuurl': reverse('futebola:jogador'),
     }

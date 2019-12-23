@@ -245,9 +245,13 @@ class Jogador(models.Model):
 
         return nota
 
-    def jogos(self, epoca):
-        fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
-            jogador=self, jogo__epoca__numeracao_epoca=epoca)
+    def jogos(self, epoca=None):
+        if epoca:
+            fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
+                jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        else:
+            fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
+                jogador=self)
         jogs = 0
 
         for ficha in fichas:
@@ -256,12 +260,16 @@ class Jogador(models.Model):
 
         return jogs
 
-    def vitorias(self, epoca):
+    def vitorias(self, epoca=None):
         vits = 0
-
-        fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
-            jogador=self, jogo__epoca__numeracao_epoca=epoca)
-
+        
+        if epoca:
+            fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
+                jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        else:
+            fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
+                jogador=self)
+            
         for ficha in fichas:
             if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
                 if ficha.equipa == 'Equipa_A':
@@ -273,11 +281,15 @@ class Jogador(models.Model):
 
         return vits
 
-    def empates(self, epoca):
+    def empates(self, epoca=None):
         emps = 0
 
-        fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
-            jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        if epoca:
+            fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
+                jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        else:
+            fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
+                jogador=self)
 
         for ficha in fichas:
             if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
@@ -286,11 +298,15 @@ class Jogador(models.Model):
 
         return emps
 
-    def derrotas(self, epoca):
+    def derrotas(self, epoca=None):
         ders = 0
 
-        fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
-            jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        if epoca:
+            fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
+                jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        else:
+            fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
+                jogador=self)
 
         for ficha in fichas:
             if not(datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
@@ -303,22 +319,30 @@ class Jogador(models.Model):
 
         return ders
 
-    def golos(self, epoca):
+    def golos(self, epoca=None):
         golos = 0
 
-        fichas = Ficha_de_jogo.objects.filter(
-            jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        if epoca:
+            fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
+                jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        else:
+            fichas = Ficha_de_jogo.objects.filter(
+                jogador=self)
 
         for ficha in fichas:
             golos += ficha.golos
 
         return golos
 
-    def assistencias(self, epoca):
+    def assistencias(self, epoca=None):
         asts = 0
 
-        fichas = Ficha_de_jogo.objects.filter(
-            jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        if epoca:
+            fichas = Ficha_de_jogo.objects.select_related('jogo').filter(
+                jogador=self, jogo__epoca__numeracao_epoca=epoca)
+        else:
+            fichas = Ficha_de_jogo.objects.filter(
+                jogador=self)
 
         for ficha in fichas:
             asts += ficha.assistencias

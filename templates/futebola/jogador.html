@@ -25,31 +25,48 @@
                             <td style="font-weight: bold">Clube:</td>
                             <td>{{ jogador.clube_favorito }}</td>
                         </tr>
-                        <tr>
-                            <td style="font-weight: bold">Golos:</td>
-                            <td>{{ jogador|golos:epoca_num }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold">Assistências:</td>
-                            <td>{{ jogador|assistencias:epoca_num }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold">Jogos:</td>
-                            <td>{{ jogador|jogos:epoca_num }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold">Vitórias:</td>
-                            <td>{{ jogador|vitorias:epoca_num }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold; text-transform: uppercase;">Pontuação:</td>
-                            <td style="font-weight: bold; text-transform: uppercase;">{{ jogador|pontuacao:epoca_num }}</td>
-                        </tr>
                     </tbody>
                 </table>
         {% else %}
             Sem dados para mostrar!
         {% endif %}
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Estatísticas</div>
+        <div class="panel-body">
+                <table class="table table-striped">
+                   <thead>
+                        <tr>
+                            <th style="text-align:center;">Época</th>
+                            <th style="text-align:center;">Jogos</th>
+														<th style="text-align:center;">Vitórias</th>
+														<th style="text-align:center;">Golos</th>
+														<th style="text-align:center;">Assistências</th>
+														<th style="text-align:center;">Pontuação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+											{% for epoca in epocas_obj %}
+                        <tr>
+                            <td style="text-align:center;font-weight: bold">{{ epoca.numeracao_epoca }}</td>
+														<td style="text-align:center;">{{ jogador|jogos:epoca.numeracao_epoca }}</td>
+														<td style="text-align:center;">{{ jogador|vitorias:epoca.numeracao_epoca }}</td>
+														<td style="text-align:center;">{{ jogador|golos:epoca.numeracao_epoca }}</td>
+														<td style="text-align:center;">{{ jogador|assistencias:epoca.numeracao_epoca }}</td>
+														<td style="text-align:center;font-weight: bold">{{ jogador|pontuacao:epoca.numeracao_epoca }}</td>
+                        </tr>
+											{% endfor %}
+											  <tr>
+                          <td style="text-align:center;font-weight: bold">TOTAL</td>
+                          <td style="text-align:center;font-weight: bold">{{ jogador.jogos }}</td>
+													<td style="text-align:center;font-weight: bold">{{ jogador.vitorias }}</td>
+													<td style="text-align:center;font-weight: bold">{{ jogador.golos }}</td>
+													<td style="text-align:center;font-weight: bold">{{ jogador.assistencias }}</td>
+													<td style="text-align:center;font-weight: bold">--</td>
+												</tr>
+                    </tbody>
+                </table>
         </div>
     </div>
 </div>
