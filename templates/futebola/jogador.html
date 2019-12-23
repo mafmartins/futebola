@@ -69,6 +69,18 @@
                 </table>
         </div>
     </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Últimos Jogos da Época Atual</div>
+        <div class="panel-body" style="text-align:center;">
+        {% if lista_jogos %}
+            {% for jogo in lista_jogos %}
+                <a href="{% url 'futebola:jogo' jogo.jogo_id %}">{{ jogo }}</a><br>
+            {% endfor %}
+        {% else %}
+            Sem dados para mostrar!
+        {% endif %}
+        </div>
+    </div>
 </div>
 </div>
 {% endblock %}

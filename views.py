@@ -96,12 +96,19 @@ def jogo(request, jogo_id):
 
 
 def jogador(request, jogador_id):
+    epoca_num=Epoca.objects.order_by('-epoca_id').first().numeracao_epoca
+    
     jogador = get_object_or_404(Jogador, jogador_id=jogador_id)
     epocas_obj = Epoca.objects.order_by('-epoca_id')
+    
+    fichas_jogo = Ficha_de_jogo.objects.select_related('jogo').filter(
+                jogador=jogador, jogo__epoca__numeracao_epoca=epoca_num).order_by('-ficha_id')[:10]
+    lista_jogos = [ficha.jogo for ficha in fichas_jogo]
 
     context = {
         'epocas_obj': epocas_obj,
         'jogador': jogador,
+        'lista_jogos': lista_jogos,
         'cuurl': reverse('futebola:jogador'),
     }
 
