@@ -9,9 +9,9 @@ import json
 from django.urls import reverse
 
 
-def index(
-    request, epoca_num=Epoca.objects.order_by("-epoca_id").first().numeracao_epoca
-):
+def index(request, epoca_num=0):
+    if not epoca_num:
+        epoca_num = Epoca.objects.order_by("-epoca_id").first().numeracao_epoca
     epocas = Epoca.objects.all()
     epoca = get_object_or_404(Epoca, numeracao_epoca=epoca_num)
 
