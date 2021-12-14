@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html style="position: relative;min-height: 100%;">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="{% static 'futebola/js/jquery-3.2.1.min.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'futebola/js/bootstrap.min.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'futebola/js/custom.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'futebola/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'futebola/css/custom.css' %}" />
+    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+</head>
+<body style="background-color:ghostwhite;">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+						<style>.navbar-header:before, .navbar-header:after  {content: none;}</style>
+            <div class="navbar-header" style="display:flex;justify-content:space-between;">
+							<div>
+            		<a class="navbar-brand" href="{% url 'futebola:index' %}" style="font-family: 'Lobster', cursive;font-size:40px;">Futebola</a>
+							</div>
+							<div>
+		            {% if epocas %}
+		                <select class="form-control" id="sel1" onchange="location = this.value;" style="margin-top: 9px;max-width:130px;">
+		                {% for epoca_item in epocas %}
+		                <option {% if epoca_item.numeracao_epoca == epoca.numeracao_epoca %} selected="selected" {% endif %} value="{{ cuurl }}{{ epoca_item.numeracao_epoca }}">{{epoca_item}}</option>
+		                {% endfor %}
+		                </select>
+		            {% endif %}
+							</div>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            </div>
+						<!-- <div class="nav">
+
+						</div> -->
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li
+                {% url 'futebola:index' as home_url %}
+                {% if home_url in request.get_full_path and is_home %}class="active"{% endif %}
+                ><a href="{% url 'futebola:index' %}">Home <span class="sr-only">(current)</span></a></li>
+                <li
+                {% url 'futebola:tops' as home_url %}
+                {% if home_url in request.get_full_path %}class="active"{% endif %}
+                ><a href="{% url 'futebola:tops' %}">Tops</a></li>
+                <li
+                {% url 'futebola:numerosEpoca' as home_url %}
+                {% if home_url in request.get_full_path %}class="active"{% endif %}
+                ><a href="{% url 'futebola:numerosEpoca' %}">Números</a></li>
+                <li
+                {% url 'futebola:penalizacoes' as home_url %}
+                {% if home_url in request.get_full_path %}class="active"{% endif %}
+                ><a href="{% url 'futebola:penalizacoes' %}">Penalizações</a></li>
+                <li
+                {% url 'futebola:regras' as home_url %}
+                {% if home_url in request.get_full_path%}class="active"{% endif %}
+                ><a href="{% url 'futebola:regras' %}">Regras</a></li>
+            </ul>
+
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+        </nav>
+    <div class="container" style="margin-bottom:50px;">
+      {% block content %}{% endblock %}
+    </div>
+    <footer class="footer" style="position: absolute;left: 0;bottom: 0;width: 100%;margin-top:20px;">
+      <div class="container-fluid text-center text-md-left" style="padding-bottom: 15px;padding-top: 15px;background-color: #f5f5f5;border-color: #e7e7e7;border-top: solid 1px #e7e7e7;">
+        <span class="text-muted">GitHub: <a href="https://github.com/mafmartins/futebola" target="_blank">https://github.com/mafmartins/futebola</a></span>
+      </div>
+    </footer>
+</body>
+</html>

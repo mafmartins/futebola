@@ -1,0 +1,91 @@
+{% extends "futebola/layout.html" %}
+{% load jogador_extras %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-1">
+    <div class="panel panel-default">
+        <div class="panel-body">
+        {% if jogador %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th colspan="6" style="text-align: left;"><h3 style="margin-top: 10px;">{{ jogador }}</h3></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+													{% if jogador.foto %}
+												<tr>
+														<td style="text-align: center;" colspan="2"><img class="img-responsive" style="max-width:150px;margin: auto;" src="{{ jogador.foto.url }}"></td>
+												</tr>
+													{% endif %}
+                        <tr>
+                            <td style="font-weight: bold">Data de Nascimento:</td>
+                            <td>{{ jogador.data_nascimento|date:"d-m-Y" }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Idade:</td>
+                            <td>{{ jogador.idade }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Clube:</td>
+                            <td>{{ jogador.clube_favorito }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+        {% else %}
+            Sem dados para mostrar!
+        {% endif %}
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Estatísticas</div>
+        <div class="panel-body">
+                <table class="table table-striped">
+                   <thead>
+                        <tr>
+                            <th style="text-align:center;">Época</th>
+                            <th style="text-align:center;">Jgs</th>
+														<th style="text-align:center;">Vit</th>
+														<th style="text-align:center;">Gls</th>
+														<th style="text-align:center;">Ass</th>
+														<th style="text-align:center;">Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+											{% for epoca in epocas_obj %}
+                        <tr>
+                            <td style="text-align:center;font-weight: bold">{{ epoca.numeracao_epoca }}</td>
+														<td style="text-align:center;">{{ jogador|jogos:epoca.numeracao_epoca }}</td>
+														<td style="text-align:center;">{{ jogador|vitorias:epoca.numeracao_epoca }}</td>
+														<td style="text-align:center;">{{ jogador|golos:epoca.numeracao_epoca }}</td>
+														<td style="text-align:center;">{{ jogador|assistencias:epoca.numeracao_epoca }}</td>
+														<td style="text-align:center;font-weight: bold">{{ jogador|pontuacao:epoca.numeracao_epoca }}</td>
+                        </tr>
+											{% endfor %}
+											  <tr>
+                          <td style="text-align:center;font-weight: bold">TOTAL</td>
+                          <td style="text-align:center;font-weight: bold">{{ jogador.jogos }}</td>
+													<td style="text-align:center;font-weight: bold">{{ jogador.vitorias }}</td>
+													<td style="text-align:center;font-weight: bold">{{ jogador.golos }}</td>
+													<td style="text-align:center;font-weight: bold">{{ jogador.assistencias }}</td>
+													<td style="text-align:center;font-weight: bold">--</td>
+												</tr>
+                    </tbody>
+                </table>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Últimos Jogos da Época Atual</div>
+        <div class="panel-body" style="text-align:center;">
+        {% if lista_jogos %}
+            {% for jogo in lista_jogos %}
+                <a href="{% url 'futebola:jogo' jogo.jogo_id %}">{{ jogo }}</a><br>
+            {% endfor %}
+        {% else %}
+            Sem dados para mostrar!
+        {% endif %}
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
