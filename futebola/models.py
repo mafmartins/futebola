@@ -119,7 +119,7 @@ class Epoca(models.Model):
                             WHERE
                                 `futebola_bonus`.`season_id` = {self.epoca_id}
                             GROUP BY
-                                `futebola_bonus`.`id`
+                                `futebola_bonus`.`player_id`
                         ) AS bonuses
                         ON (
                             `futebola_ficha_de_jogo`.`jogador_id` =
