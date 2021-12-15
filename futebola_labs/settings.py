@@ -32,7 +32,7 @@ ALLOWED_HOSTS = [
     "localhost",
 ]
 
-CSRF_TRUSTED_ORIGINS = ["futebola.fansubs.pt"]
+CSRF_TRUSTED_ORIGINS = ["https://futebola.fansubs.pt"]
 
 
 # Application definition
