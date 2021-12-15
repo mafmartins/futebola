@@ -123,7 +123,7 @@ class Epoca(models.Model):
                         ) AS bonuses
                         ON (
                             `futebola_ficha_de_jogo`.`jogador_id` =
-                            `bonuses`.`id`
+                            `bonuses`.`player_id`
                             )
                 WHERE (
                     `futebola_epoca`.`numeracao_epoca` = {self.numeracao_epoca}
