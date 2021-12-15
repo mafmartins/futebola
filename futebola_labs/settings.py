@@ -32,6 +32,8 @@ ALLOWED_HOSTS = [
     "localhost",
 ]
 
+CSRF_TRUSTED_ORIGINS = ["futebola.fansubs.pt"]
+
 
 # Application definition
 
