@@ -21,7 +21,7 @@
 							</div>
 							<div>
 		            {% if epocas %}
-		                <select class="form-control" id="sel1" onchange="location = this.value;" style="margin-top: 9px;max-width:130px;">
+		                <select class="form-control" id="sel1" onchange="location = this.value;" style="margin-top: 9px;">
 		                {% for epoca_item in epocas %}
 		                <option {% if epoca_item.numeracao_epoca == epoca.numeracao_epoca %} selected="selected" {% endif %} value="{{ cuurl }}{{ epoca_item.numeracao_epoca }}">{{epoca_item}}</option>
 		                {% endfor %}
@@ -54,10 +54,10 @@
                 {% url 'futebola:numerosEpoca' as home_url %}
                 {% if home_url in request.get_full_path %}class="active"{% endif %}
                 ><a href="{% url 'futebola:numerosEpoca' %}">Números</a></li>
-                <li
+                <!-- <li
                 {% url 'futebola:penalizacoes' as home_url %}
                 {% if home_url in request.get_full_path %}class="active"{% endif %}
-                ><a href="{% url 'futebola:penalizacoes' %}">Penalizações</a></li>
+                ><a href="{% url 'futebola:penalizacoes' %}">Penalizações</a></li> -->
                 <li
                 {% url 'futebola:regras' as home_url %}
                 {% if home_url in request.get_full_path%}class="active"{% endif %}
