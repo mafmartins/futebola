@@ -112,7 +112,7 @@ class Epoca(models.Model):
                             )
                     LEFT JOIN (
                             SELECT
-                                `futebola_bonus`.`id`,
+                                `futebola_bonus`.`player_id`,
                                 SUM(`futebola_bonus`.`value`) AS bonus
                             FROM
                                 `futebola_bonus`
