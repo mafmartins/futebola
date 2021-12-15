@@ -84,11 +84,13 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "futebola",
         "USER": "futebola",
-        "PASSWORD": "l2KzPhAAkPkAdM4z",
-        "HOST": "server.fansubs.pt",
-        "PORT": "8201",
+        "PASSWORD": "futebola",
+        "HOST": "127.0.0.1",
+        "PORT": "1990",
     }
 }
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

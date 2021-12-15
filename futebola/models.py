@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, division
 
+import datetime
+
 from django.shortcuts import get_object_or_404
 from django.db import models, connection
 from django.core.validators import MaxValueValidator, MinValueValidator
-import datetime
+
+from futebola.constants import BonusType
 
 
 class Epoca(models.Model):
@@ -35,13 +38,15 @@ class Epoca(models.Model):
                 + jogos*{self.valor_participacao}
                 + golos*{self.valor_golos}
                 + assistencias*{self.valor_assistencias}
-                - COALESCE(penalizacao,0) AS pontuacao,
+                - COALESCE(penalizacao,0)
+                + COALESCE(bonus,0) AS pontuacao,
                 golos+assistencias AS combinado
             FROM (
                 SELECT
                     `futebola_jogador`.`nome`,
                     `futebola_jogador`.`jogador_id`,
                     `penalizacoes`.`penalizacao`,
+                    `bonuses`.`bonus`,
                     SUM((
                         CASE
                             WHEN equipa = \"equipa_a\"
@@ -104,6 +109,21 @@ class Epoca(models.Model):
                         ON (
                             `futebola_ficha_de_jogo`.`jogador_id` =
                             `penalizacoes`.`jogador_id`
+                            )
+                    LEFT JOIN (
+                            SELECT
+                                `futebola_bonus`.`id`,
+                                SUM(`futebola_bonus`.`value`) AS bonus
+                            FROM
+                                `futebola_bonus`
+                            WHERE
+                                `futebola_bonus`.`season_id` = {self.epoca_id}
+                            GROUP BY
+                                `futebola_bonus`.`id`
+                        ) AS bonuses
+                        ON (
+                            `futebola_ficha_de_jogo`.`jogador_id` =
+                            `bonuses`.`id`
                             )
                 WHERE (
                     `futebola_epoca`.`numeracao_epoca` = {self.numeracao_epoca}
@@ -557,6 +577,7 @@ class Jogador(models.Model):
         )
         epoca = Epoca.objects.filter(numeracao_epoca=epoca_num).first()
         penalizacoes = Penalizacao.objects.filter(jogador=self, epoca=epoca)
+        bonuses = Bonus.objects.filter(jogador=self, epoca=epoca)
 
         for ficha in fichas:
             if not (
@@ -582,6 +603,9 @@ class Jogador(models.Model):
 
         for penalizacao in penalizacoes:
             pontos -= penalizacao.valor
+
+        for bonus in bonuses:
+            pontos += bonus.value
 
         return pontos
 
@@ -749,6 +773,12 @@ class Jogo(models.Model):
 
         return lista_jogo
 
+    def bonuses_list(self):
+        return Bonus.objects.filter(game=self)
+
+    def penalties_list(self):
+        return Penalizacao.objects.filter(game=self)
+
     @staticmethod
     def media_golos_jogo(epoca):
         jogos = Jogo.objects.filter(epoca__numeracao_epoca=epoca)
@@ -790,10 +820,26 @@ class Ficha_de_jogo(models.Model):
 class Penalizacao(models.Model):
     penalizacao_id = models.AutoField(primary_key=True)
     jogador = models.ForeignKey(Jogador, on_delete=models.CASCADE)
-    epoca = models.ForeignKey("Epoca", on_delete=models.CASCADE, null=True)
+    epoca = models.ForeignKey(Epoca, on_delete=models.CASCADE)
+    game = models.ForeignKey(Jogo, on_delete=models.CASCADE, null=True, blank=True)
     data = models.DateField(default=datetime.date.today)
     valor = models.IntegerField(default=0)
     motivo = models.CharField(max_length=100)
 
     def __str__(self):
         return "%s | %s | %s | %s " % (self.data, self.jogador, self.motivo, self.valor)
+
+
+class Bonus(models.Model):
+    player = models.ForeignKey(Jogador, on_delete=models.CASCADE)
+    game = models.ForeignKey(Jogo, on_delete=models.CASCADE, null=True, blank=True)
+    season = models.ForeignKey(Epoca, on_delete=models.CASCADE)
+    type = models.CharField(choices=BonusType.choices(), max_length=100)
+    value = models.IntegerField(default=0)
+    date = models.DateField(default=datetime.date.today)
+
+    class Meta:
+        verbose_name_plural = "Bonuses"
+
+    def __str__(self):
+        return f"{self.player} | {self.get_type_display()} | {self.value}"

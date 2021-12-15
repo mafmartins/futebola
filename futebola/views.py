@@ -70,7 +70,12 @@ def jogo(request, jogo_id):
 
     lista_equipa = jogo.lista_equipa
 
-    context = {"jogo": jogo, "lista_equipa": lista_equipa}
+    context = {
+        "jogo": jogo,
+        "lista_equipa": lista_equipa,
+        "bonuses_list": jogo.bonuses_list,
+        "penalties_list": jogo.penalties_list,
+    }
 
     return render(request, "futebola/jogo.html", context)
 

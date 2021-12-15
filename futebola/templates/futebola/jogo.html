@@ -45,5 +45,63 @@
             </div>
         </div>
     </div>
+    <div class="col-sm-5 col-sm-offset-1">
+        <div class="panel panel-default">
+            <div class="panel-heading">Bonificações</div>
+            <div class="panel-body">
+            {% if bonuses_list %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Bonficação</th>
+                                <th>Pontos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for bonus in bonuses_list %}
+                            <tr>
+                                <td>{{ bonus.player.nome }}</td>
+                                <td>{{ bonus.get_type_display }}</td>
+                                <td>+{{ bonus.value }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            {% else %}
+                Sem dados para mostrar!
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">Penalizações</div>
+            <div class="panel-body">
+            {% if penalties_list %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Penalização</th>
+                                <th>Pontos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for penalty in penalties_list %}
+                            <tr>
+                                <td>{{ penalty.jogador.nome }}</td>
+                                <td>{{ penalty.motivo }}</td>
+                                <td>-{{ penalty.valor }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            {% else %}
+                Sem dados para mostrar!
+            {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
