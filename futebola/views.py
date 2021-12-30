@@ -250,12 +250,16 @@ def gerarEquipas(request):
         sume2 = 0
 
         for x in team1:
-            equipa1.append(get_object_or_404(Jogador, jogador_id=int(x.keys()[0])))
-            sume1 += int(x.values()[0])
+            equipa1.append(
+                get_object_or_404(Jogador, jogador_id=int(list(x.keys())[0]))
+            )
+            sume1 += int(list(x.values())[0])
 
         for x in team2:
-            equipa2.append(get_object_or_404(Jogador, jogador_id=int(x.keys()[0])))
-            sume2 += int(x.values()[0])
+            equipa2.append(
+                get_object_or_404(Jogador, jogador_id=int(list(x.keys())[0]))
+            )
+            sume2 += int(list(x.values())[0])
 
         context = {
             "equipa1": equipa1,
@@ -275,13 +279,12 @@ def criarEquipas(request):
 
         data = json.loads(request.body)
 
-        ultimoJogo = Jogo.objects.all().order_by("-jogo_id").first()
         novoJogo = Jogo(
-            local=ultimoJogo.local, epoca=Epoca.objects.order_by("-epoca_id").first()
+            local=data.get("local"), epoca=Epoca.objects.order_by("-epoca_id").first()
         )
         novoJogo.save()
 
-        for jogadorId in data["equipaA"]:
+        for jogadorId in data.get("equipaA"):
             ficha = Ficha_de_jogo(
                 jogador=Jogador.objects.get(pk=jogadorId),
                 equipa="Equipa_A",
@@ -289,7 +292,7 @@ def criarEquipas(request):
             )
             ficha.save()
 
-        for jogadorId in data["equipaB"]:
+        for jogadorId in data.get("equipaB"):
             ficha = Ficha_de_jogo(
                 jogador=Jogador.objects.get(pk=jogadorId),
                 equipa="Equipa_B",
@@ -303,7 +306,7 @@ def criarEquipas(request):
 
 
 def team(t):
-    iterations = range(2, len(t) / 2 + 1)
+    iterations = range(2, int(len(t) / 2 + 1))
 
     totalscore = sum(t)
     halftotalscore = totalscore / 2.0

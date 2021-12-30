@@ -19,6 +19,6 @@ repos:
             args: ['--config=.flake8']
 
 default_language_version:
-    python: python3.9
+    python: python3.10
 
 default_stages: [commit, push]

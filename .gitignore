@@ -109,3 +109,6 @@ venv.bak/
 
 # SQL
 *.sql
+
+# Settings
+settings_local.py
