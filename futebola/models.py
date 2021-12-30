@@ -577,7 +577,7 @@ class Jogador(models.Model):
         )
         epoca = Epoca.objects.filter(numeracao_epoca=epoca_num).first()
         penalizacoes = Penalizacao.objects.filter(jogador=self, epoca=epoca)
-        bonuses = Bonus.objects.filter(jogador=self, epoca=epoca)
+        bonuses = Bonus.objects.filter(player=self, season=epoca)
 
         for ficha in fichas:
             if not (
