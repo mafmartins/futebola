@@ -375,45 +375,19 @@ class Jogador(models.Model):
     data_nascimento = models.DateField(default=datetime.date.today)
     clube_favorito = models.CharField(max_length=100)
     foto = models.ImageField(null=True)
-    guarda_redes = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
-    defesa = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
-    ataque = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
-    velocidade = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
-    resistencia = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
-    forca = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
-    tecnica = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
-    passe = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
-    remates_longe = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
-    finalizacao = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
-    posicionamento = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
-    garra = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
-    experiencia = models.PositiveIntegerField(
-        default=0, validators=[MinValueValidator(1), MaxValueValidator(10)]
-    )
+    guarda_redes = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    defesa = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    ataque = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    velocidade = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    resistencia = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    forca = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    tecnica = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    passe = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    remates_longe = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    finalizacao = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    posicionamento = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    garra = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    experiencia = models.PositiveIntegerField(default=0, validators=[MinValueValidator(1), MaxValueValidator(10)])
 
     class Meta:
         ordering = ["nome"]
@@ -426,10 +400,7 @@ class Jogador(models.Model):
         idade = (
             today.year
             - self.data_nascimento.year
-            - (
-                (today.month, today.day)
-                < (self.data_nascimento.month, self.data_nascimento.day)
-            )
+            - ((today.month, today.day) < (self.data_nascimento.month, self.data_nascimento.day))
         )
 
         return idade
@@ -463,10 +434,7 @@ class Jogador(models.Model):
         jogs = 0
 
         for ficha in fichas:
-            if not (
-                datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0))
-                > datetime.datetime.today()
-            ):
+            if not (datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
                 jogs += 1
 
         return jogs
@@ -482,10 +450,7 @@ class Jogador(models.Model):
             fichas = Ficha_de_jogo.objects.select_related("jogo").filter(jogador=self)
 
         for ficha in fichas:
-            if not (
-                datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0))
-                > datetime.datetime.today()
-            ):
+            if not (datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
                 if ficha.equipa == "Equipa_A":
                     if ficha.jogo.resultado_a > ficha.jogo.resultado_b:
                         vits += 1
@@ -506,10 +471,7 @@ class Jogador(models.Model):
             fichas = Ficha_de_jogo.objects.select_related("jogo").filter(jogador=self)
 
         for ficha in fichas:
-            if not (
-                datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0))
-                > datetime.datetime.today()
-            ):
+            if not (datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
                 if ficha.jogo.resultado_a == ficha.jogo.resultado_b:
                     emps += 1
 
@@ -526,10 +488,7 @@ class Jogador(models.Model):
             fichas = Ficha_de_jogo.objects.select_related("jogo").filter(jogador=self)
 
         for ficha in fichas:
-            if not (
-                datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0))
-                > datetime.datetime.today()
-            ):
+            if not (datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
                 if ficha.equipa == "Equipa_A":
                     if ficha.jogo.resultado_a < ficha.jogo.resultado_b:
                         ders += 1
@@ -580,10 +539,7 @@ class Jogador(models.Model):
         bonuses = Bonus.objects.filter(player=self, season=epoca)
 
         for ficha in fichas:
-            if not (
-                datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0))
-                > datetime.datetime.today()
-            ):
+            if not (datetime.datetime.combine(ficha.jogo.data, datetime.time(22, 0)) > datetime.datetime.today()):
                 pontos += (
                     (ficha.golos * epoca.valor_golos)
                     + (ficha.assistencias * epoca.valor_assistencias)
@@ -609,15 +565,13 @@ class Jogador(models.Model):
 
         return pontos
 
-    def forma(
-        self, epoca_num=Epoca.objects.order_by("-epoca_id").first().numeracao_epoca
-    ):
+    def forma(self, epoca_num=Epoca.objects.order_by("-epoca_id").first().numeracao_epoca):
         golos = 0
         assis = 0
 
-        fichas = Ficha_de_jogo.objects.filter(
-            jogador=self, jogo__epoca__numeracao_epoca=epoca_num
-        ).order_by("-ficha_id")[:5]
+        fichas = Ficha_de_jogo.objects.filter(jogador=self, jogo__epoca__numeracao_epoca=epoca_num).order_by(
+            "-ficha_id"
+        )[:5]
 
         if len(fichas) == 5:
             for ficha in fichas:
@@ -635,9 +589,7 @@ class Jogador(models.Model):
 
         return pontos_forma
 
-    def moral(
-        self, epoca_num=Epoca.objects.order_by("-epoca_id").first().numeracao_epoca
-    ):
+    def moral(self, epoca_num=Epoca.objects.order_by("-epoca_id").first().numeracao_epoca):
         vitorias = 0
 
         fichas = (
@@ -648,15 +600,9 @@ class Jogador(models.Model):
 
         if len(fichas) == 5:
             for ficha in fichas:
-                if (
-                    ficha.equipa == "Equipa_A"
-                    and ficha.jogo.resultado_a >= ficha.jogo.resultado_b
-                ):
+                if ficha.equipa == "Equipa_A" and ficha.jogo.resultado_a >= ficha.jogo.resultado_b:
                     vitorias += 1
-                if (
-                    ficha.equipa == "Equipa_B"
-                    and ficha.jogo.resultado_b >= ficha.jogo.resultado_a
-                ):
+                if ficha.equipa == "Equipa_B" and ficha.jogo.resultado_b >= ficha.jogo.resultado_a:
                     vitorias += 1
         else:
             return 0
@@ -666,22 +612,12 @@ class Jogador(models.Model):
         rank = 0
         epoca = get_object_or_404(Epoca, numeracao_epoca=epoca_num)
 
-        lista_jogadores = epoca.lista_jogs(
-            "-pontuacao, -golos, -assistencias, -jogos, -vitorias, derrotas"
-        )
+        lista_jogadores = epoca.lista_jogs("-pontuacao, -golos, -assistencias, -jogos, -vitorias, derrotas")
 
         for i, jogador in enumerate(lista_jogadores):
-            if (
-                i < 10
-                and jogador["jogador_id"] == self.jogador_id
-                and jogador["jogos"] >= 5
-            ):
+            if i < 10 and jogador["jogador_id"] == self.jogador_id and jogador["jogos"] >= 5:
                 rank = i
-            elif (
-                i >= 10
-                and jogador["jogador_id"] == self.jogador_id
-                and jogador["jogos"] >= 5
-            ):
+            elif i >= 10 and jogador["jogador_id"] == self.jogador_id and jogador["jogos"] >= 5:
                 rank = 10
 
         pontos_rank = (abs(rank - 10) - 5) / 2
@@ -721,12 +657,13 @@ class Jogador(models.Model):
                 SELECT
                     COUNT(clube_favorito)
                 FROM `futebola_jogador`
-                WHERE clube_favorito=\"{clube}\"
+                WHERE clube_favorito=\"{clube[0]}\"
                 """
             )
             count = cursor.fetchone()
             count_clubes.append({str(clube[0]): int(count[0])})
 
+        # TODO: Sort this list
         return count_clubes
 
 
